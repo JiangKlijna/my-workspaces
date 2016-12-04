@@ -1,0 +1,104 @@
+﻿<title>New Query</title>
+<style type='text/css'>
+#z{
+box-shadow: 8px 8px 2px #888888;
+border-radius:15px;
+width:900px;
+height:320px;
+background:rgb(165,179,198);
+margin:0 auto;
+}
+#z table{
+width:450px;height:160px;
+background-color:#abcdef;
+border-radius:10%;
+border:double pink 7px;
+margin:0 auto;
+box-shadow: 4px 4px 2px #888888;
+}
+#z input,button,select,option{
+font-size:14px;
+font-weight:600;
+}
+#z button{
+border:2px solid #abcdef;
+height:40px;
+border-radius:50%;
+cursor:pointer;
+}
+#z input{
+background-color:transparent;
+height:44px;
+border-radius:20%;
+}
+#z select,option{
+width:85px;height:40px;
+border-radius: 25px;
+}
+#z #sq{width:430px;}
+#z #sbtn button{margin-left:15px;}
+#google{background-color:rgb(103,162,212);}
+#yahoo{background-color:rgb(124,198,124);}
+#baidu{background-color:rgb(224,117,114);}
+#soso{background-color:rgb(119,151,170);}
+#sougou{background-color:rgb(195,91,255);}
+#youdao{background-color:rgb(51,187,186);}
+#san60{background-color:rgb(0,0,255);}
+#bing{background-color:rgb(255,132,51);}
+#wanggou{background-color:rgb(110,110,110);}
+#shipi{background-color:rgb(228,218,92);}
+#shipin{background-color:rgb(45,249,249);}
+#yemm{background-color:rgb(247,67,47);}
+</style>
+<script type='text/javascript'>
+var S=WG=SP=[];
+S['google']='http://wen.lu/?gws_rd=cr#q=';
+S['baidu']='http://baidu.com/s?wd=';
+S['soso']='http://soso.com/q?query=';
+S['sougou']='http://sogou.com/web?query=';
+S['bing']='http://cn.bing.com/search?q=';
+S['youdao']='http://www.youdao.com/search?q=';
+S['san60']='http://www.so.com/s?q=';
+S['yahoo']='http://sg.search.yahoo.com/search?p=';
+WG['tmall']='http://list.tmall.com/search_product.htm?q=';
+WG['taobao']='http://s.taobao.com/search?q=';
+WG['jingdong']='http://search.jd.com/Search?keyword=';
+SP['youku']='http://www.soku.com/search_video/q_';
+SP['xunlei']='http://search.kankan.com/search.php?keyword=';
+SP['tgxp']='http://v.qq.com/search.html?ms_key=';
+SP['souhu']='http://so.tv.sohu.com/mts?wd=';
+SP['aqy']='http://so.iqiyi.com/so/q_';
+function getIDv(s){return document.getElementById(s).value;}
+function SO(t){open(S[t.id]+getIDv('sq'));}
+function wanggou(){open(WG[getIDv('yemm')]+getIDv('gouwu'));}
+function shipin(){open(SP[getIDv('shipin')]+getIDv('uipn'));}
+</script>
+<body style='background:#cce8cf;'>
+<br /><br /><br /><br />
+<div id='z'><br /><br /><br />
+<table>
+<tr><td colspan='3'><input id='sq' placeholder='搜索一下' /></td></tr>
+<tr><td colspan='3' id='sbtn'>
+<button id='baidu' onclick='SO(this)'>百度</button>
+<button id='google' onclick='SO(this)'>谷歌</button>
+<button id='bing' onclick='SO(this)'>必应</button>
+<button id='sougou' onclick='SO(this)'>搜狗</button>
+<button id='youdao' onclick='SO(this)'>有道</button>
+<button id='san60' onclick='SO(this)'>360</button><hr /></td></tr>
+<tr><td><input id='gouwu' placeholder='网银一下' /></td>
+<td><select id='yemm'>
+<option value='tmall'>天猫商城</option>
+<option value='taobao'>淘宝商城</option>
+<option value='jingdong'>京东商城</option></select></td>
+<td><button id='wanggou' onclick='wanggou()'>网购</button></td></tr>
+<tr><td><input id='uipn' placeholder='看看视频' /></td>
+<td><select id='shipin'>
+<option value='youku'>优酷土豆</option>
+<option value='xunlei'>迅雷看看</option>
+<option value='tgxp'>腾讯视频</option>
+<option value='souhu'>搜狐视频</option>
+<option value='aqy'>爱奇艺</option></select></td>
+<td><button id='shipi' onclick='shipin()'>视频</button></td></tr>
+</table>
+</div>
+</body>

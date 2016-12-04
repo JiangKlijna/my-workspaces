@@ -1,0 +1,283 @@
+<head>
+<meta charset="utf-8" />
+<meta name="Author" content="jiang" />
+<title>New Shudu</title>
+</head>
+<script type="text/javascript">
+window.onmousemove = function show_coords(event) {
+xy['x'] = event.clientX;
+xy['y'] = event.clientY;
+}
+
+document.oncontextmenu = function (){return false}
+
+document.onkeydown=function(event){if(B){
+var e = event || window.event || arguments.callee.caller.arguments[0];
+var u=parseInt(ShowDiv.lang);
+if(e && e.keyCode==48||e && e.keyCode==96){tds[u].innerHTML='&nbsp';}
+if(e && e.keyCode==49||e && e.keyCode==97){tds[u].innerHTML='1';}
+if(e && e.keyCode==50||e && e.keyCode==98){tds[u].innerHTML='2';}
+if(e && e.keyCode==51||e && e.keyCode==99){tds[u].innerHTML='3';}
+if(e && e.keyCode==52||e && e.keyCode==100){tds[u].innerHTML='4';}
+if(e && e.keyCode==53||e && e.keyCode==101){tds[u].innerHTML='5';}
+if(e && e.keyCode==54||e && e.keyCode==102){tds[u].innerHTML='6';}
+if(e && e.keyCode==55||e && e.keyCode==103){tds[u].innerHTML='7';}
+if(e && e.keyCode==56||e && e.keyCode==104){tds[u].innerHTML='8';}
+if(e && e.keyCode==57||e && e.keyCode==105){tds[u].innerHTML='9';}
+if(e && e.keyCode==13){foretd();
+ShowDiv.style.display='none';
+}}}
+
+window.onmousedown=function (){
+if (event.button==2){
+ShowDiv.style.display='none';
+foretd();
+}}
+
+window.onload=function (){
+//给81个格子+onclick事件
+for(var i=0;i<tds.length;i++){
+//tds[i].innerHTML=i;
+(function(n,i){
+n.onmousedown=function (){
+if (event.button==2){
+n.innerHTML='&nbsp;';
+}}
+
+n.onclick=function (){
+foretd();
+n.style.borderColor='#99CC33';
+ShowDiv.style.left=xy['x']+'px';
+ShowDiv.style.top=xy['y']+'px';
+ShowDiv.style.display='block';
+ShowDiv.lang=i;
+//按键输入打开
+B=true;
+}
+})(tds[i],i)}
+//给9个可选格子+onclick事件
+for(var i=0;i<btns.length;i++){
+(function (n){
+n.onclick=function (){
+var int_value=n.innerHTML;
+var Fushowdiv=n.parentNode.parentNode.parentNode.parentNode.parentNode;
+var pos=parseInt(Fushowdiv.lang)
+tds[pos].innerHTML=int_value;
+foretd();
+Fushowdiv.style.display='none';
+}
+})(btns[i])
+}
+}
+
+function Tinner(i){
+return tds[i].innerHTML;}
+
+function foretd(){
+for(var i=0;i<tds.length;i++){
+tds[i].style.borderColor='#abcdef';}
+B=false;/*
+X1=[Tinner(0),Tinner(1),Tinner(2),Tinner(9),Tinner(10),Tinner(11),Tinner(18),Tinner(19),Tinner(20)];
+X2=[Tinner(3),Tinner(4),Tinner(5),Tinner(12),Tinner(13),Tinner(14),Tinner(21),Tinner(22),Tinner(23)];
+X3=[Tinner(6),Tinner(7),Tinner(8),Tinner(15),Tinner(16),Tinner(17),Tinner(24),Tinner(25),Tinner(26)];
+X4=[Tinner(27),Tinner(28),Tinner(29),Tinner(36),Tinner(37),Tinner(38),Tinner(45),Tinner(46),Tinner(47)];
+X5=[Tinner(30),Tinner(31),Tinner(32),Tinner(39),Tinner(40),Tinner(41),Tinner(48),Tinner(49),Tinner(50)];
+X6=[Tinner(33),Tinner(34),Tinner(35),Tinner(42),Tinner(43),Tinner(44),Tinner(51),Tinner(52),Tinner(53)];
+X7=[Tinner(54),Tinner(55),Tinner(56),Tinner(63),Tinner(64),Tinner(65),Tinner(72),Tinner(73),Tinner(74)];
+X8=[Tinner(57),Tinner(58),Tinner(59),Tinner(66),Tinner(67),Tinner(68),Tinner(75),Tinner(76),Tinner(77)];
+X9=[Tinner(60),Tinner(61),Tinner(62),Tinner(69),Tinner(70),Tinner(71),Tinner(78),Tinner(79),Tinner(80)];
+
+Y1=[Tinner(0),Tinner(3),Tinner(6),Tinner(27),Tinner(30),Tinner(33),Tinner(54),Tinner(57),Tinner(60)];
+Y2=[Tinner(1),Tinner(4),Tinner(7),Tinner(28),Tinner(31),Tinner(1),Tinner(1),Tinner(1),Tinner(1)];
+Y3=[Tinner(2),Tinner(5),Tinner(8),Tinner(29),Tinner(32),Tinner(1),Tinner(1),Tinner(1),Tinner(1)];
+Y4=[Tinner(9),Tinner(12),Tinner(15),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1)];
+Y5=[Tinner(10),Tinner(13),Tinner(16),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1)];
+Y6=[Tinner(11),Tinner(14),Tinner(17),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1)];
+Y7=[Tinner(18),Tinner(21),Tinner(24),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1)];
+Y8=[Tinner(19),Tinner(22),Tinner(25),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1)];
+Y9=[Tinner(20),Tinner(23),Tinner(26),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1)];
+
+A1=[Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1)];
+A2=[Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1)];
+A3=[Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1)];
+A4=[Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1)];
+A5=[Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1)];
+A6=[Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1)];
+A7=[Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1)];
+A8=[Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1)];
+A9=[Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1),Tinner(1)];
+*/
+}
+</script>
+<style type="text/css">
+
+#zhong{
+width:535px;height:480px;
+background-color:rgb(165,179,198);
+}
+#zhong td{
+border:2px solid #abcdef;
+width:50px;height:50px;
+text-align:center;
+cursor:pointer;
+font-size:30px;
+font-weight:900;
+}
+#zhong table{
+float:left;
+border:1px solid green;
+}
+
+button{
+cursor:pointer;
+width:30px;height:30px;
+background:transparent;
+}
+
+#x{
+border:1px solid #abcdef;
+width:110px;height:110px;
+}
+</style>
+
+<body style="background:#cce8cf;" onselectstart="return false" >
+<center><br /><br /><br />
+<div id="zhong">
+<table class="top">
+  <tr>
+    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+  </tr>
+</table>
+
+<table class="top">
+  <tr>
+    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+  </tr>
+</table>
+<table class="top">
+  <tr>
+    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+  </tr>
+</table>
+
+<table class="middle">
+  <tr>
+    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+  </tr>
+</table>
+
+<table class="middle">
+  <tr>
+    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+  </tr>
+</table>
+
+<table class="middle">
+  <tr>
+    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+  </tr>
+</table>
+
+<table class="bottom">
+  <tr>
+    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+  </tr>
+</table>
+
+<table class="bottom">
+  <tr>
+    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+  </tr>
+</table>
+
+<table class="bottom">
+  <tr>
+    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+  </tr>
+</table>
+</div>
+<div id='x' style='display:none;position: absolute;'>
+<table>
+  <tr>
+    <td><button>1</button></td>
+    <td><button>2</button></td>
+    <td><button>3</button></td>
+  </tr>
+  <tr>
+    <td><button>4</button></td>
+    <td><button>5</button></td>
+    <td><button>6</button></td>
+  </tr>
+  <tr>
+    <td><button>7</button></td>
+    <td><button>8</button></td>
+    <td><button>9</button></td>
+  </tr>
+</table>
+</div>
+</center>
+<script type='text/javascript'>
+//全局变量
+var xy=[];
+var tds=document.getElementById('zhong').getElementsByTagName('td');
+var ShowDiv=document.getElementById('x');
+var btns=document.getElementById('x').getElementsByTagName('button');
+var B=false;
+var X1=X2=X3=X4=X5=X6=X7=X8=X9=[];
+var Y1=Y2=Y3=Y4=Y5=Y6=Y7=Y8=Y9=[];
+var A1=A2=A3=A4=A5=A6=A7=A8=A9=[];
+</script>

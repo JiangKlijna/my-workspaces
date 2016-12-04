@@ -1,0 +1,517 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta chararset="utf-8" />
+<meta name="Author" content="jiang" />
+<title> New Color </title>
+</head>
+<script type="text/javascript">
+window.viewmap = [];
+function $(key){
+	var view = viewmap[key];
+	if(view == null){
+		view = document.getElementById(key);
+		viewmap[key] = view;
+	}
+	return view;
+}
+
+function is_int(inin){
+	return parseInt(inin)-inin == 0;
+}
+//RegExp("^0\\.[0-9]+|1|0$")
+function is_a(inin){
+	var i = parseFloat(inin);
+	return i>=0 && i<=1;
+}
+//^[0-9a-fA-F]{6}$
+function is_hex(inin){
+	return !isNaN("0x"+inin);
+}
+
+function is_jiaint(inin){
+	return parseInt(inin)-inin == 0 ? inin >= 0 : false;
+}
+
+function intable(one,two){
+	var x=$('able').insertRow(0);
+	x.insertCell(0).innerHTML=one;
+	x.insertCell(1).innerHTML=two;
+}
+function colors_intable(rgb, rgba, hsl, hex) {
+	intable("rgba", rgba);
+	intable("hex", hex);
+	intable("hsl", hsl);
+	intable("rgb", rgb);
+	intable('color type','color value');
+	intable("————","————");
+}
+/**
+* color class
+*/
+//Rgb
+function Rgb(red,green,blue){
+	this.r = parseInt(red);
+	this.g = parseInt(green);
+	this.b = parseInt(blue);
+}
+//Rgba
+function Rgba(red,green,blue,alpha){
+	this.r = parseInt(red);
+	this.g = parseInt(green);
+	this.b = parseInt(blue);
+	this.a = parseFloat(alpha);
+	this.rgb = null;
+}
+//Hsl
+function Hsl(hue, saturation, lightness) {
+	this.h = parseInt(hue);
+	this.s = parseFloat(saturation);
+	this.l = parseFloat(lightness);
+	this.rgb = null;
+}
+//Hex
+function Hex(hex) {
+	this.hex = hex;
+	this.rgb = null;
+}
+//Rgb::dynamic
+Rgb.prototype.rgb_rgba = function(){
+	var ra=parseFloat(1-(this.r/255)).toFixed(2);
+	var ga=parseFloat(1-(this.g/255)).toFixed(2);
+	var ba=parseFloat(1-(this.b/255)).toFixed(2);
+	var ce = function (color,a){
+		if(color==255){
+			return color;
+		}
+		for(var c=1;c<256;c++){
+			if(color==parseInt(c-1+(255-c)*(1-a))){
+				return c-1;
+			}
+		}
+		return null;
+	}
+	var rA=[ce(this.r,ra),ce(this.g,ra),ce(this.b,ra)];
+	if(rA[0]!=null && rA[1]!=null && rA[2]!=null){
+		return new Rgba(rA[0], rA[1], rA[2], ra);
+	}
+	var gA=[ce(this.r,ga),ce(this.g,ga),ce(this.b,ga)];
+	if(gA[0]!=null && gA[1]!=null && gA[2]!=null){
+		return new Rgba(gA[0], gA[1], gA[2], ga);
+	}
+	var bA=[ce(this.r,ba),ce(this.g,ba),ce(this.b,ba)];
+	if(bA[0]!=null && bA[1]!=null && bA[2]!=null){
+		return new Rgba(bA[0], bA[1], bA[2], ba);
+	}
+}
+Rgb.prototype.rgb_hex = function(){
+	var hex = ((this.r << 16) | (this.g << 8) | this.b).toString(16);
+	while(hex.length != 6){
+		hex = '0' + hex;
+	}
+	return new Hex(hex);
+}
+Rgb.prototype.rgb_hsl = function(){
+	var red=(this.r/255);
+	var green=(this.g/255);
+	var blue=(this.b/255);
+	var maxc=Math.max(red,green,blue);
+	var minc=Math.min(red,green,blue);
+	var L=((maxc+minc)/2);
+	var S,H;
+	if(maxc==minc){
+		return new Hsl(0, 0, L);
+	}else{
+		if(L<0.5){
+			var S=(maxc-minc)/(maxc+minc);
+		}else if(L>=0.5){
+			var S=(maxc-minc)/(2-maxc-minc);
+		}
+	}
+	if(maxc==red){
+		var H=((green-blue)/(maxc-minc));
+	}else if(maxc==green){
+		var H=(2.0+(blue-red)/(maxc-minc));
+	}else if(maxc==blue){
+		var H=(4.0+(red-green)/(maxc-minc));
+	}
+	H*=60;
+	if(H<0){
+		H+=360;
+	}
+	return new Hsl(H, S, L);
+}
+Rgb.prototype.toString = function () {
+	return this.r+','+this.g+','+this.b;
+}
+Rgb.prototype.setBgColor = function(key){
+	$(key).style.backgroundColor='rgb('+this.toString()+')';
+}
+//Rgb::static
+Rgb.prered = null;
+Rgb.pregreen = null;
+Rgb.preblue = null;
+Rgb.test = function (red, green, blue) {
+	if(red == '' || green== '' || blue== ''){
+		alert("每一项都必须填");
+		return false;
+	}else if(isNaN(red) || isNaN(green) || isNaN(blue)){
+		alert("必须填数字");
+		return false;
+	}else if(red>255||red<0|| green>255||green<0|| blue>255||blue<0){
+		alert("必须填0-255的数字");
+		return false;
+	}else if(!is_int(red)||!is_int(green)||!is_int(blue)){
+		alert("必须填写整数");
+		return false;
+	}else if(Rgb.prered == red && Rgb.pregreen == green && Rgb.preblue == blue){
+		alert("计算结果已经在下方显示!");
+		return false;
+	}else{
+		Rgb.prered = red;
+		Rgb.pregreen = green;
+		Rgb.preblue = blue;
+		return true;
+	}
+}
+Rgb.convert = function(){
+	var red=$("red").value;
+	var green=$("green").value;
+	var blue=$("blue").value;
+	if(Rgb.test(red, green, blue)){
+		var rgb = new Rgb(red, green, blue);
+		var rgba = rgb.rgb_rgba();
+		var hsl = rgb.rgb_hsl();
+		var hex = rgb.rgb_hex();
+		rgb.setBgColor("moni");
+		colors_intable(rgb, rgba, hsl, hex);
+	}
+}
+//Rgba::dynamic
+Rgba.prototype.rgba_rgb = function (){
+	if(this.rgb == null){
+		var red = Math.ceil(this.r+(255-this.r)*(1-this.a)-1);
+		var green = Math.ceil(this.g+(255-this.g)*(1-this.a)-1);
+		var blue = Math.ceil(this.b+(255-this.b)*(1-this.a)-1);
+		this.rgb = new Rgb(red, green, blue);
+	}
+	return this.rgb;
+}
+Rgba.prototype.rgba_hex = function (){
+	return this.rgba_rgb().rgb_hex();
+}
+Rgba.prototype.rgba_hsl = function (){
+	return this.rgba_rgb().rgb_hsl();
+}
+Rgba.prototype.toString = function() {
+	return this.r+','+this.g+','+this.b+','+this.a;
+};
+//Rgba::static
+Rgba.prered = null;
+Rgba.pregreen = null;
+Rgba.preblue = null;
+Rgba.preAlpha = null;
+Rgba.test = function (ra, ga, ba, rgba) {
+	if(ra == '' || ga== '' || ba== '' || rgba==''){
+		alert("每一项都必须填");
+		return false;
+	}else if(isNaN(ra) || isNaN(ga) || isNaN(ba) || isNaN(rgba)){
+		alert("必须填数字");
+		return false;
+	}else if(ra>255||ra<0|| ga>255||ga<0|| ba>255||ba<0||rgba<0||rgba>1){
+		alert("rgb必须填0-255的数字a必须填0-1的数字");
+		return false;
+	}else if(!is_int(ra)||!is_int(ga)||!is_int(ba)||!is_a(rgba)){
+		alert("rgb必须填写整数a必须填写0-1的数");
+		return false;
+	}else if(Rgba.prered == ra && Rgba.pregreen == ga && Rgba.preblue == ba && Rgba.preAlpha == rgba){
+		alert("计算结果已经在下方显示!");
+		return false;
+	}else{
+		Rgba.prered = ra;
+		Rgba.pregreen = ga;
+		Rgba.preblue = ba;
+		Rgba.preAlpha = rgba;
+		return true;
+	}
+}
+Rgba.convert = function(){
+	var ra=$("reda").value;
+	var ga=$("greena").value;
+	var ba=$("bluea").value;
+	var rgba=$("rgbalpha").value;
+	if(Rgba.test(ra, ga, ba, rgba)){
+		var rgba = new Rgba(ra, ga, ba, rgba);
+		var rgb = rgba.rgba_rgb();
+		var hsl = rgba.rgba_hsl();
+		var hex = rgba.rgba_hex();
+		rgb.setBgColor("moni");
+		colors_intable(rgb, rgba, hsl, hex);
+	}
+}
+//Hex::dynamic
+Hex.prototype.hex_rgb = function () {
+	if(this.rgb == null){
+		var red = Number('0x'+this.hex[0]+this.hex[1]);
+		var green = Number('0x'+this.hex[2]+this.hex[3]);
+		var blue = Number('0x'+this.hex[4]+this.hex[5]);
+		this.rgb = new Rgb(red, green, blue);
+	}
+	return this.rgb;
+}
+Hex.prototype.hex_rgba = function () {
+	return this.hex_rgb().rgb_rgba();
+}
+Hex.prototype.hex_hsl = function () {
+	return this.hex_rgb().rgb_hsl();
+}
+Hex.prototype.toString = function () {
+	return this.hex;
+}
+//Hex::static
+Hex.prehex = null;
+Hex.test = function (hex) {
+	if(hex == ''){
+		alert("这一项都必须填");
+		return false;
+	}else if(hex.length !=6){
+		alert("必须填6位16进制数");
+		return false;
+	}else if(!is_hex(hex)){
+		alert("必须填6位数，每个数的范围都在0-9,a-f,A-F之间");
+		return false;
+	}else if(Hex.prehex == hex){
+		alert("计算结果已经在下方显示!");
+		return false;
+	}else{
+		Hex.prehex = hex;
+		return true;
+	}
+}
+Hsl.convert = function(){
+	var H=$("hue").value;
+	var S=$("saturation").value;
+	var L=$("lightness").value;
+	if(Hsl.test(H, S, L)){
+		var hsl = new Hsl(H, S, L);
+		var rgb = hsl.hsl_rgb();
+		var rgba = hsl.hsl_rgba();
+		var hex = hsl.hsl_hex();
+		rgb.setBgColor("moni");
+		colors_intable(rgb, rgba, hsl, hex);
+	}
+}
+//Hsl::dynamic
+Hsl.prototype.hsl_rgb = function() {
+	if(this.rgb != null){
+		return this.rgb;
+	}
+	if(this.s==0){
+		rgb=Math.floor(this.l*255)+1;
+		this.rgb = new Rgb(rgb, rgb, rgb);
+		return this.rgb;
+	}
+	H01=parseFloat(this.h/360);
+	if(this.l<0.5){
+		two=this.l*(1.0+this.s);
+	}
+	if(this.l>=0.5){
+		two=this.l+this.s-this.l*this.s;
+	}
+	one=2.0*this.l-two;
+	rered=H01+(1.0/3.0);
+	regreen=H01;
+	reblue=H01-(1.0/3.0);
+	var red=Math.floor(testrgb(one,two,rered)*255)+1;
+	var green=Math.floor(testrgb(one,two,regreen)*255)+1;
+	var blue=Math.floor(testrgb(one,two,reblue)*255)+1;
+	this.rgb = new Rgb(red, green, blue);
+	return this.rgb;
+	function testrgb(one,two,three){
+		if(three<0){three=three+1.0;}
+		if(three>1){three=three-1.0;}
+		if((6.0*three)<1){
+		color=one+(two-one)*6.0*three;return color;}
+		else if((2.0*three)<1){color=two;return color;}
+		else if((3.0*three)<2){
+		color=one+(two-one)*6.0*((2.0/3.0)-three);return color;}
+		else{color=one;return color;}
+	}
+}
+Hsl.prototype.hsl_hex = function() {
+	return this.hsl_rgb().rgb_hex();
+};
+Hsl.prototype.hsl_rgba = function() {
+	return this.hsl_rgb().rgb_rgba();
+};
+Hsl.prototype.toString = function() {
+	return this.h+','+this.s.toFixed(4)+','+this.l.toFixed(4);
+};
+//hsla-->rgba function hsla_rgba(H,S,L,a){return hsl_rgb(H,S,L)+','+a;}
+//Hsl::static
+Hsl.preh = null;
+Hsl.pres = null;
+Hsl.prel = null;
+Hsl.test = function (H, S, L) {
+	if(H == '' || S== '' || L== ''){
+		alert("每一项都必须填");
+		return false;
+	}else if(isNaN(H) || isNaN(S) || isNaN(L)){
+		alert("必须填数字");
+		return false;
+	}else if(H>360||H<0|| S>1||S<0|| L>1||L<0){
+		alert("h必须填0-360的数字sl必须填写0-1的数字");
+		return false;
+	}else if(!is_int(H)){
+		alert("h必须填写整数");
+		return false;
+	}else if(Hsl.preh == H && Hsl.pres == S && Hsl.prel == L){
+		alert("计算结果已经在下方显示!");
+		return false;
+	}else{
+		Hsl.preh = H;
+		Hsl.pres = S;
+		Hsl.prel = L;
+		return true;
+	}
+}
+Hex.convert = function(){
+	var hex_s=$("hexv").value;
+	if(Hex.test(hex_s)){
+		var hex = new Hex(hex_s);
+		var rgb = hex.hex_rgb();
+		var rgba = hex.hex_rgba();
+		var hsl = hex.hex_hsl();
+		rgb.setBgColor("moni");
+		colors_intable(rgb, rgba, hsl, hex);
+	}
+}
+//
+var top_colors=['rgb(103,162,212)','rgb(72,163,50)','rgb(224,117,114)','rgb(195,91,255)'];
+var top_ids=['rgbdiv','rgbadiv','hsldiv','hexdiv'];
+var cut = function (s){
+	var b=top_ids[s];
+	$('rgbdiv').style.display='none';
+	$('rgbadiv').style.display='none';
+	$('hsldiv').style.display='none';
+	$('hexdiv').style.display='none';
+	$(b).style.display='block';
+	$(b).style.borderColor=top_colors[s];
+	$('able').style.borderColor=top_colors[s];
+};
+</script>
+<style type="text/css">
+body{background-color:rgb(204,232,207);
+font-weight:bold;
+text-align:center;}
+.Div{
+border-radius:5px;
+margin:0 auto;
+text-align:center;
+width:900px;
+height:280px;
+background:rgb(165,179,198);
+}
+.four{
+width:480px;
+height:126px;
+border:double 5px;
+text-align:center;
+display:none;
+}
+input{
+font-size:20px;
+background-color:transparent;
+border-radius:10px;
+}.n{width:52px;}
+.rgbc{background-color:rgb(103,162,212);}
+.rgbac{background-color:rgb(72,163,50);}
+.hslc{background-color:rgb(224,117,114);}
+.hexc{background-color:rgb(195,91,255);}
+button{
+height:50px;
+cursor:pointer;
+border-radius:10px;
+border:rgb(165,179,198) 1px solid;
+}
+.bBtn{
+width:280px;
+font-size:19px;
+}
+.bBtn:hover{
+border-radius:15px;
+box-shadow: 4px 4px 3px #888888;
+font-weight:900;
+}
+#basebtn button{
+width:78px;font-size:15px;
+box-shadow: 8px 8px 4px #888888;
+margin: 6px;
+}
+#basebtn button:hover{
+border-radius:15px;
+box-shadow: 4px 4px 3px #888888;
+font-weight:900;
+}
+#rgbdiv{
+display:block;
+border-color:rgb(103,162,212);
+}
+#moni{
+width:900px;height:30px;
+margin:0 auto;
+}
+#able{
+margin:0 auto;
+text-align:center;
+font-size:18px;
+border:solid 10px rgb(103,162,212);
+}
+td{
+width:230px;
+border:dashed rgb(204,232,207) 2px;
+}
+</style>
+<br /><br /><br />
+<div class='Div'>
+<br /><br />
+<div id='basebtn'>
+<button class='rgbc' onclick='cut(0)'>rgb</button>
+<button class='rgbac' onclick='cut(1)'>rgba</button>
+<button class='hslc' onclick='cut(2)'>hsl</button>
+<button class='hexc' onclick='cut(3)'>hex</button>
+</div>
+<br />
+<center>
+<div id='rgbdiv' class='four'>rgb模式|
+R:<input class='n' type='text' id='red' />,
+G:<input class='n' type='text' id='green' />,
+B:<input class='n' type='text' id='blue' />
+<hr />范围||R:[0~255];G:[0~255];B:[0~255];<br />
+<button class='rgbc bBtn' onclick='Rgb.convert()'>转换</button>
+</div>
+<div id='rgbadiv' class='four'>rgba模式|
+R:<input class='n' type='text' id='reda' />,
+G:<input class='n' type='text' id='greena' />,
+B:<input class='n' type='text' id='bluea' />,
+a:<input class='n' type='text' id='rgbalpha' />
+<hr />范围||R:[0~255];G:[0~255];B:[0~255];a:(0~1];<br />
+<button class='rgbac bBtn' onclick='Rgba.convert()'>转换</button></div>
+<div id='hsldiv' class='four'>hsl模式|
+H:<input class='n' type='text' id='hue' />,
+S:<input class='n' type='text' id='saturation' />,
+L:<input class='n' type='text' id='lightness' />
+<hr />范围||H:[0~360];S:[0~1];L:[0~1];<br />
+<button class='hslc bBtn' onclick='Hsl.convert()'>转换</button></div>
+<div id='hexdiv' class='four'>＃16进制数|
+#<input type='text' id='hexv' />
+<hr />范围||#:[0x000000~0xffffff];<br />
+<button class='hexc bBtn' onclick='Hex.convert()'>转换</button></div>
+</div>
+<p id='moni'>&nbsp;</p></center>
+<div class='Div' style='height:auto'>
+<table id='able'>
+<tr><td>color type</td><td>color value</td></tr>
+</table>
+</div>
+</html>

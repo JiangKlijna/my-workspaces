@@ -1,0 +1,60 @@
+﻿<head>
+<meta name="Author" content="cj">
+<title> New Document </title>
+<style type="text/css">
+b{font-weight:100}
+button{font-size:10px}
+input,button{background:transparent}
+body{background:#cce8cf}
+</style>
+</head>
+<script type="text/javascript">
+function rgb(){
+this.color=['#006633','#009999','#64d238','#3399CC','#FFCC33','#990066','#99CC00','#009933','#336699','#993399']}
+var RGB=new rgb();
+
+document.onkeydown=function(event){
+var e = event || window.event || arguments.callee.caller.arguments[0];
+if(e && e.keyCode==13){//Enter
+tian();}}
+
+function Jiaint(inin){
+var bi=parseInt(inin)-inin;
+if(bi==0){if(inin>0){return true;}}
+else{return false;}}
+
+function Jrandom(n){
+if(n==null){return Math.random()}else{
+return parseInt(Math.random()*n)+1}}
+
+function removeDom(y){
+y=y.parentNode
+document.body.removeChild(y)}
+
+function tian(){
+var tw=document.getElementById('tw').value
+var th=document.getElementById('th').value
+if(tw==''||th==''){alert('不能为空');return}
+var tw=parseInt(tw)
+var th=parseInt(th)
+if(!Jiaint(tw)||!Jiaint(th)){alert('输入正整数');return}
+var h=document.getElementsByTagName('body')[0]
+var divlaber=document.createElement("div");
+divlaber.style.width=tw+'mm';
+divlaber.style.height=th+'mm';
+divlaber.innerHTML="width:<b id='w'>"+tw+"mm</b>;height:<b id='h'>"+th+"mm</b>;<br /><button onclick='removeDom(this)'>消失</button>"
+divlaber.style.background=RGB.color[Jrandom(10)-1]
+h.appendChild(divlaber);
+}
+
+//对于删除全部区块的方案
+//var b=document.getElementsByTagName('button')
+//for(var i=0;i<b.length;i++){x(b[i])}
+</script>
+<div>添加一个区块--<br />
+width:<input type="text" id="tw"/>mm<br />
+height:<input type="text" id="th"/>mm<br />
+<input type="button" onclick="tian()" value="做比较(按回车)" />
+</div>
+
+

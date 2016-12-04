@@ -1,0 +1,235 @@
+﻿<head>
+<meta charset="utf-8" />
+<meta name="Author" content="jiang" />
+<title>New hex</title>
+</head>
+<script type="text/javascript">
+
+function st(s){
+var re=[];
+for(var i=0;i<s.length-1;i++){
+re[i]=s[i];}
+return re.join("");}
+
+//改变进制
+window.onload=function(){hexbase(10)}
+function hexbase(x){
+if(x!=10){var x=parseInt(this.value)}
+baseNum=x;
+
+for(var i=0;i<hexbtn.length;i++){
+if(parseInt(hexbtn[i].value) != x){hexbtn[i].style.background="rgb(171, 205, 239)"}
+else{hexbtn[i].style.background="rgb(242, 182, 62)"}}
+
+for(var i=0;i<numbtn.length;i++){
+if(parseInt(numbtn[i].value) >= x){numbtn[i].disabled="disabled"}
+else{numbtn[i].disabled=""}}
+for(var o=0;o<reli.length;o++){reli[o].innerHTML='';}
+hextext.value="";}
+
+//利用按钮来更新值
+function hexnum(){baseValue=hextext.value+=this.name;suan()}
+//利用键盘输入更新值
+document.onkeydown=function(event){var str='';var b=baseNum;
+var e = event || window.event || arguments.callee.caller.arguments[0];
+if((e && e.keyCode==96) || (e && e.keyCode==48)){str="0";}
+if((e && e.keyCode==97) || (e && e.keyCode==49)){str="1";}
+if(((e && e.keyCode==98) || (e && e.keyCode==50))&&(b>2)){str="2";}
+if(((e && e.keyCode==99) || (e && e.keyCode==51))&&(b>3)){str="3";}
+if(((e && e.keyCode==100) || (e && e.keyCode==52))&&(b>4)){str="4";}
+if(((e && e.keyCode==101) || (e && e.keyCode==53))&&(b>5)){str="5";}
+if(((e && e.keyCode==102) || (e && e.keyCode==54))&&(b>6)){str="6";}
+if(((e && e.keyCode==103) || (e && e.keyCode==55))&&(b>7)){str="7";}
+if(((e && e.keyCode==104) || (e && e.keyCode==56))&&(b>8)){str="8";}
+if(((e && e.keyCode==105) || (e && e.keyCode==57))&&(b>9)){str="9";}
+if(e && e.keyCode==65 &&b>10){str="a";}
+if(e && e.keyCode==66 &&b>11){str="b";}
+if(e && e.keyCode==67 &&b>12){str="c";}
+if(e && e.keyCode==68 &&b>13){str="d";}
+if(e && e.keyCode==69 &&b>14){str="e";}
+if(e && e.keyCode==70 &&b>15){str="f";}
+baseValue=hextext.value+=str;suan()}
+
+var num=[];
+num['0']=0;num['1']=1;num['2']=2;num['3']=3;
+num['4']=4;num['5']=5;num['6']=6;num['7']=7;
+num['8']=8;num['9']=9;num['a']=10;num['b']=11;
+num['c']=12;num['d']=13;num['e']=14;num['f']=15;
+/*10进制数转换其他进制*/
+function shire(a,b){
+var a = new Number(a);
+return a.toString(b);}
+/*其他进制数转换10进制*/
+function reshi(a,b){var x=0;
+var a=a.split("").reverse();
+for(var i=0;i<a.length;i++){
+x+=num[a[i]]*Math.pow(b,i);}
+return x;}
+//reshi(str,num){num}
+//shire(num,num){str}
+
+
+function suan(){
+var b=baseNum;
+var v=baseValue;
+if(b!=10){v=reshi(v,b)}
+
+var re=[];
+for(var i=2;i<17;i++){re[i]=shire(v,i)}
+for(var o=0;o<reli.length;o++){reli[o].innerHTML=re[o+2];}
+}
+
+
+
+</script>
+<style type="text/css">
+.zhong{
+width:800px;height:320px;
+background-color:rgb(165,179,198);}
+
+#mune{
+width:170px;height:320px;
+float:left;}
+
+#mune button{
+width:54px;height:64px;
+background-color: rgb(171, 205, 239);
+font-weight:900;
+font-size:18px;
+}
+#con{
+width:400px;height:400px;
+float:left;
+}
+#con button{
+font-weight:900;
+font-size:18px;
+width:50px;height:50px;
+background-color:rgb(100,200,200);
+}
+#hextext{
+width:200px;height:36px;
+font-weight:900;
+font-size:18px;
+}
+.base:hover{
+background-color:rgb(242, 182, 62);
+
+}
+#re{
+width:auto;height:auto;
+background-color:rgb(165,179,198);
+float:left;
+font-weight:900;
+font-size:18px;
+position:relative;
+top:-30px;
+}
+li:hover{
+font-size:20px;
+}
+
+#ja,#jb,#jc,#jd{
+background-color:rgb(228,232,237);
+}
+</style>
+
+<body style="background:#cce8cf;">
+<center><br /><br /><br /><br />
+<div class="zhong">
+<div id="mune">
+<table>
+<tr>
+<button value="2">二进制</button>
+<button value="7">七进制</button>
+<button value="12">12进制</button>
+</tr>
+<tr>
+<button value="3">三进制</button>
+<button value="8">八进制</button>
+<button value="13">13进制</button>
+</tr>
+<tr>
+<button value="4">四进制</button>
+<button value="9">九进制</button>
+<button value="14">14进制</button>
+</tr>
+<tr>
+<button value="5">五进制</button>
+<button value="10">十进制</button>
+<button value="15">15进制</button>
+</tr>
+<tr>
+<button value="6">六进制</button>
+<button value="11">11进制</button>
+<button value="16">16进制</button>
+</tr>
+</table>
+</div>
+<br /><br />
+<div id="con">
+<input readonly="true" type="text" id="hextext"/><br />
+<table>
+<tr>
+<button value="0" name="0">0</button>
+<button value="1" name="1">1</button>
+<button value="2" name="2">2</button>
+<button value="3" name="3">3</button><br />
+</tr>
+<tr>
+<button value="4" name="4">4</button>
+<button value="5" name="5">5</button>
+<button value="6" name="6">6</button>
+<button value="7" name="7">7</button><br />
+</tr>
+<tr>
+<button value="8" name="8">8</button>
+<button value="9" name="9">9</button>
+<button value="10" name="a">A</button>
+<button value="11" name="b">B</button><br />
+</tr>
+<tr>
+<button value="12" name="c">C</button>
+<button value="13" name="d">D</button>
+<button value="14" name="e">E</button>
+<button value="15" name="f">F</button><br />
+</tr>
+</table>
+</div>
+
+<div id="re">
+<li id="jb" type="1" value="2"></li>
+<li type="1" value="3"></li>
+<li type="1" value="4"></li>
+<li type="1" value="5"></li>
+<li type="1" value="6"></li>
+<li type="1" value="7"></li>
+<li id="jc" type="1" value="8"></li>
+<li type="1" value="9"></li>
+<li id="jd" type="1" value="10"></li>
+<li type="1" value="11"></li>
+<li type="1" value="12"></li>
+<li type="1" value="13"></li>
+<li type="1" value="14"></li>
+<li type="1" value="15"></li>
+<li id="ja" type="1" value="16"></li>
+
+</div>
+
+</div>
+</center>
+<script type="text/javascript">
+function J(a){return document.getElementById(a);}
+/*动态绑定*/
+var baseNum,baseValue;
+var hexbtn=document.getElementById('mune').getElementsByTagName('button');//J(".base");
+for(var i=0;i<hexbtn.length;i++){hexbtn[i].onclick=hexbase;}
+
+var numbtn=document.getElementById('con').getElementsByTagName('button');//J(".num");
+for(var i=0;i<numbtn.length;i++){numbtn[i].onclick=hexnum;}
+
+var reli=document.getElementById('re').getElementsByTagName('li');
+
+var hextext=document.getElementById('hextext');
+
+</script>

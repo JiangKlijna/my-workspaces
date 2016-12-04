@@ -1,0 +1,200 @@
+﻿<!DOCTYPE html><html id='h'><meta charset="utf-8" />
+<meta name="Author" content="jiang" />
+<title>New 2048</title>
+<script type="text/javascript">
+function T(x){return tds[x].innerHTML}
+//获取16个元素的数组字符串
+function tdsToString(){var u=[];
+for(var i=0;i<tds.length;i++){
+u[i]=tds[i].innerHTML}
+return u.toString()}
+//总结.
+function sum(){
+lis[0].innerHTML='分数:'+F;
+lis[1].innerHTML='次数:'+(++C);}
+//随机添加一个数
+function random_td(){
+var j=0;var meitd=[];
+for(var i=0;i<tds.length;i++){
+if(tds[i].innerHTML==''){meitd[j]=tds[i];j++}}
+if(meitd.length==0){return false}
+var jishu=parseInt(Math.random()*j);
+meitd[jishu].style.background="#66CC99";
+meitd[jishu].innerHTML=(parseInt(Math.random()*2)+1)*2;}
+//计数
+function count(arr){
+var re=[];
+for(var i=0;i<arr.length;i++){
+var t=tds[arr[i]].innerHTML;
+if(t!=''){re.push(parseInt(t))}}
+return re;}
+//改变数据的颜色
+function tdhtml(dom,htm){
+dom.innerHTML=htm;
+if(htm==''){dom.style.background="#009999";}
+else{dom.style.background="#66CC99";}}
+//按键
+document.onkeydown=function(event){var s;
+var e = event || window.event || arguments.callee.caller.arguments[0];if(e){
+if(e.keyCode==37){s='left'}
+if(e.keyCode==38){s='top'}
+if(e.keyCode==39){s='right'}
+if(e.keyCode==40){s='bottom'}move(s);}}
+//返回一步
+function back(){
+var p=pre.split(',');
+for(var i=0;i<tds.length;i++){
+tds[i].innerHTML=p[i];
+if(p[i]!=''){tds[i].style.background="#66CC99";
+}else{tds[i].style.background="#009999";}}}
+//游戏结束
+function over(){var j=0;
+for(var i=0;i<tds.length;i++){
+if(tds[i].innerHTML=='2048'){alert('victory!');newgame()}
+else if(tds[i].innerHTML!=''){j++}}
+if(j==16 && T(0)!=T(1) && T(0)!=T(4) && T(1)!=T(2) && T(1)!=T(5) && T(2)!=T(6)
+&& T(2)!=T(3) && T(3)!=T(7) && T(4)!=T(5) && T(4)!=T(8) && T(5)!=T(9)
+&& T(5)!=T(6) && T(6)!=T(10) && T(6)!=T(7) && T(7)!=T(11) && T(8)!=T(9)
+&& T(8)!=T(12) && T(9)!=T(13) && T(9)!=T(10) && T(10)!=T(14) && T(10)!=T(11)
+&& T(11)!=T(15)){alert('defeat!');newgame()}}
+//上面是没有直接调用的函数
+function newgame(){
+for(var i=0;i<tds.length;i++){
+tds[i].innerHTML='';
+tds[i].style.background='#009999';}
+random_td();random_td();
+F=C=0;
+lis[0].innerHTML='分数:'+F;
+lis[1].innerHTML='次数:'+C;}
+window.onload=function(){//设置全局变量和开始新游戏
+document.getElementById('h').style.height=screen.height*0.8;
+F=C=0;
+tds=document.getElementById('zi').getElementsByTagName('td');
+lis=document.getElementsByTagName('li');
+top1=[0,4,8,12];top2=[1,5,9,13];top3=[2,6,10,14];top4=[3,7,11,15];
+left1=[0,1,2,3];left2=[4,5,6,7];left3=[8,9,10,11];left4=[12,13,14,15];
+right1=[3,2,1,0];right2=[7,6,5,4];right3=[11,10,9,8];right4=[15,14,13,12];
+bottom1=[12,8,4,0];bottom2=[13,9,5,1];bottom3=[14,10,6,2];bottom4=[15,11,7,3];
+newgame();}
+function move(play){
+pre=tdsToString();
+for(var i=1;i<5;i++){
+var temp=eval(play+i);
+var data=count(temp);
+if(data.length==1){
+tdhtml(tds[temp[0]],data[0]);
+tdhtml(tds[temp[1]],'');
+tdhtml(tds[temp[2]],'');
+tdhtml(tds[temp[3]],'');
+}else if(data.length==2){
+if(data[0]==data[1]){
+tdhtml(tds[temp[0]],data[0]*2);F+=data[0]*2;
+tdhtml(tds[temp[1]],'');
+tdhtml(tds[temp[2]],'');
+tdhtml(tds[temp[3]],'');}
+else if(data[0]!=data[1]){
+tdhtml(tds[temp[0]],data[0]);
+tdhtml(tds[temp[1]],data[1]);
+tdhtml(tds[temp[2]],'');
+tdhtml(tds[temp[3]],'');}
+}else if(data.length==3){
+if(data[0]==data[1]){
+tdhtml(tds[temp[0]],data[0]*2);F+=data[0]*2;
+tdhtml(tds[temp[1]],data[2]);
+tdhtml(tds[temp[2]],'');
+tdhtml(tds[temp[3]],'');}
+else if(data[0]!=data[1] && data[1]==data[2]){
+tdhtml(tds[temp[0]],data[0]);
+tdhtml(tds[temp[1]],data[1]*2);F+=data[1]*2;
+tdhtml(tds[temp[2]],'');
+tdhtml(tds[temp[3]],'');}
+else if(data[0]!=data[1] && data[1]!=data[2]){
+tdhtml(tds[temp[0]],data[0]);
+tdhtml(tds[temp[1]],data[1]);
+tdhtml(tds[temp[2]],data[2]);
+tdhtml(tds[temp[3]],'');}
+}else if(data.length==4){
+if(data[0]==data[1] && data[2]!=data[3]){
+tdhtml(tds[temp[0]],data[0]*2);F+=data[0]*2;
+tdhtml(tds[temp[1]],data[2]);
+tdhtml(tds[temp[2]],data[3]);
+tdhtml(tds[temp[3]],'');}
+else if(data[0]==data[1] && data[2]==data[3]){
+tdhtml(tds[temp[0]],data[0]*2);F+=data[0]*2;
+tdhtml(tds[temp[1]],data[2]*2);F+=data[2]*2;
+tdhtml(tds[temp[2]],'');
+tdhtml(tds[temp[3]],'');}
+else if(data[0]!=data[1] && data[1]==data[2]){
+tdhtml(tds[temp[0]],data[0]);
+tdhtml(tds[temp[1]],data[1]*2);F+=data[1]*2;
+tdhtml(tds[temp[2]],data[3]);
+tdhtml(tds[temp[3]],'');}
+else if(data[0]!=data[1] && data[1]!=data[2] && data[2]!=data[3]){
+tdhtml(tds[temp[0]],data[0]);
+tdhtml(tds[temp[1]],data[1]);
+tdhtml(tds[temp[2]],data[2]);
+tdhtml(tds[temp[3]],data[3]);}
+else if(data[0]!=data[1] && data[1]!=data[2] && data[2]==data[3]){
+tdhtml(tds[temp[0]],data[0]);
+tdhtml(tds[temp[1]],data[1]);
+tdhtml(tds[temp[2]],data[2]*2);F+=data[2]*2;
+tdhtml(tds[temp[3]],'');}}}
+var aft=tdsToString();
+if(pre!=aft){random_td();sum();over()}}
+</script>
+<style type="text/css">
+*{margin:0;padding:0;}
+#zhong{
+margin:0 auto;
+width:490px;height:330px;
+background-color:rgb(165,179,198);}
+#zi{
+float:left;}
+li,button,#zi td{
+font-size:24px;font-weight:900;}
+#zi td{
+width:80px;height:80px;
+background-color:#009999;
+text-align:center;}
+.five{
+cursor:pointer;
+border:rgb(165,179,198) 1px solid;
+border-radius:15px;
+box-shadow: 4px 4px 3px #888888;
+}.five:hover{border-radius:50%;}
+#five td,.five{
+width:50px;height:50px;}
+#while{width:150px;height:50px;
+border:rgb(165,179,198) 1px solid;
+cursor:pointer;margin:5px;
+outline:#00FF00 dotted 2px;
+background:rgb(165,179,198)}
+#while:hover{font-size:25px;}
+</style>
+<body style="background:#cce8cf;">
+<br /><br /><br /><br />
+<div id="zhong"><table id="zi">
+<tr><td id="A1"></td><td id="A2"></td><td id="A3"></td><td id="A4"></td></tr>
+<tr><td id="B1"></td><td id="B2"></td><td id="B3"></td><td id="B4"></td></tr>
+<tr><td id="C1"></td><td id="C2"></td><td id="C3"></td><td id="C4"></td></tr>
+<tr><td id="D1"></td><td id="D2"></td><td id="D3"></td><td id="D4"></td></tr>
+</table>
+<br />
+<li style="color:#CC3333"></li><br />
+<li style="color:#336699"></li>
+<hr />
+<table id='five'><tr><td></td><td>
+<button onclick="move('top')" class="five" style="background:#CC3366">上</button>
+</td><td></td></tr><tr><td>
+<button onclick="move('left')" class="five" style="background:#FF9933">左</button>
+</td><td>
+<button onclick="back()" class="five" style="background:#c35bff">退</button>
+</td><td>
+<button onclick="move('right')" class="five" style="background:#CC3333">右</button>
+</td></tr><tr><td></td><td>
+<button onclick="move('bottom')" class="five" style="background:#99CC00">下</button>
+</td><td></td></tr>
+</table>
+<hr />
+<button onclick="newgame()" id="while">重新开始</button>
+</div>
