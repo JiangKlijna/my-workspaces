@@ -29,3 +29,6 @@
 #gradle
 */.gradle/
 *.log
+
+
+*/test/
