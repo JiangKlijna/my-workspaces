@@ -1,0 +1,112 @@
+<html>
+<head>
+<meta name="author" content="jiang" />
+<title>New UrlForm</title>
+<style type='text/css'>
+::-webkit-input-placeholder{color:#a55;}
+::-moz-placeholder{color:#a55;}
+:-moz-placeholder{color:#a55;}
+section {
+    border-radius:12px;
+    width:900px;
+    padding: 10px;
+    background:#a5b3c6;
+    margin:0 auto;
+}
+section #url {
+    background-color: #cce8cf;
+    height:45px;
+    width: 100%;
+    font-size: 20px;
+    outline: none;
+    border: 0;
+}
+section table {
+    width: 100%;
+    text-align: center;
+}
+section button {
+    background: transparent;
+    margin: 5px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #cce8cf;
+    cursor: pointer;
+    border-radius: 5px;
+    outline: none;
+}
+section button:hover {
+    background-color: #cce8cf;
+}
+#urlform section {
+    width:450px;
+}
+#urlform section input {
+    padding: 5px;
+    margin: 5px;
+    width: 100%;
+    background-color: #cce8cf;
+    outline: none;
+    border: 0;
+}
+#urlform section button {
+    width: 100%;
+}
+</style>
+</head>
+<body bgcolor='#cce8cf'>
+<br /><br /><br /><br />
+<section>
+<input id='url' placeholder='请  输  入  url  ...'>
+<table>
+    <tr>
+        <td><button onclick="generate(this.innerHTML)">get</button></td>
+        <td><button onclick="generate(this.innerHTML)">post</button></td>
+        <td><button onclick="generate(this.innerHTML)">put</button></td>
+        <td><button onclick="generate(this.innerHTML)">head</button></td>
+        <td><button onclick="generate(this.innerHTML)">delete</button></td>
+        <td><button onclick="generate(this.innerHTML)">options</button></td>
+    </tr>
+</table>
+</section>
+<br /><br /><br /><br />
+<div id="urlform"></div>
+</body>
+<script type='text/javascript'>
+    var urldom = document.getElementById("url");
+    var urlform = document.getElementById("urlform");
+    var generate = function (method) {
+        var url = urldom.value;
+        if (url == '') {
+            alert(urldom.placeholder);
+            return;
+        }
+        var urldata = url.split('?');
+        var action = urldata.shift();
+        var doms = [];
+        doms.push('<section><form method="');
+        doms.push(method);
+        doms.push('" action="');
+        doms.push(action);
+        doms.push('"><table>');
+        for (var kvs of urldata) {
+            for (var kv of kvs.split('&')) {
+                var kv = kv.split('=');
+                doms.push('<tr><td><span>');
+                doms.push(kv[0]);
+                doms.push(':</span></td>');
+                doms.push('<td><input name="');
+                doms.push(kv[0]);
+                doms.push('" value="');
+                doms.push(kv[1]);
+                doms.push('"></td></tr>');
+            }
+        }
+        doms.push('</table><button type="submit">');
+        doms.push(method);
+        doms.push('</button>');
+        doms.push('</form></section>');
+        urlform.innerHTML = doms.join('');
+    }
+</script>
+<html>
