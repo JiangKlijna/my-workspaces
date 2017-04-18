@@ -1,0 +1,168 @@
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="Author" content="jiang" />
+<title>New Calendar</title>
+<style type="text/css">
+#cj_calendar {
+	width:450px;
+	background:#fff;
+    margin: 0 auto;
+    font-family: consolas;
+    border: 10px solid #eee;
+	box-shadow:0px 1px 1px rgba(0,0,0,0.1);
+}
+#cj_calendar nav a {
+    font-size: 20px;
+    position: fixed;
+}
+#cj_calendar nav #nav_month {
+    font-size: 20px;
+    font-weight: 700;
+    width: 80%;
+    text-align: center;
+}
+#cj_calendar nav #nav_year {
+    font-size: 18px;
+    font-weight: 400;
+    width: 80%;
+    text-align: center;
+}
+#cj_calendar nav .nav_btn {
+    width: 10%;
+    color: #aaa;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    font-size: 20px;
+}
+#cj_calendar table{
+	width:100%;
+}
+#cj_calendar section table td {
+	height:36px;
+	line-height:36px;
+	box-sizing:border-box;
+	text-align:center;
+}
+#cj_calendar section .prevtd {
+    color: #aaa;
+}
+#cj_calendar section .currentd {
+    color: #6ac13c;
+    border: 1px solid #6ac13c;
+	background: #e9f8df;
+}
+.green {
+	color:#6ac13c;
+}
+.validtd:hover {
+    cursor: pointer;
+}
+</style>
+</head>
+<body>
+    <div id="cj_calendar">
+        <nav>
+            <table>
+                <tr>
+                    <td id="nav_prev" class="nav_btn" rowspan="2"><</td>
+                    <td id="nav_month" class="green">Month</td>
+                    <td id="nav_next" class="nav_btn" rowspan="2">></td>
+                </tr>
+                <tr><td id="nav_year" class="green">Year</td></tr>
+            </table>
+        </nav>
+        <hr color="#eee" />
+        <section>
+            <table id="cj_date"></table>
+        </section>
+    </div>
+</body>
+<script type='text/javascript'>
+window.cj = {
+    date : new Date(),
+    month_olympic : [31,29,31,30,31,30,31,31,30,31,30,31],
+    month_normal : [31,28,31,30,31,30,31,31,30,31,30,31],
+    first_tr : '<tr><td>MON</td><td>TUE</td><td>WED</td><td>THU</td><td>FRI</td><td>SAT</td><td>SUN</td></tr>',
+    month_name : ["January","Febrary","March","April","May","June","July","Auguest","September","October","November","December"],
+    nav_month : document.getElementById('nav_month'),
+    nav_year : document.getElementById('nav_year'),
+    nav_prev : document.getElementById('nav_prev'),
+    nav_next : document.getElementById('nav_next'),
+    cj_date : document.getElementById('cj_date'),
+    onClickTd : function (td) {
+        var tdhtml = parseInt(td.innerHTML)
+        for (var dom of document.getElementsByClassName('validtd')) {
+            var domhtml = parseInt(dom.innerHTML);
+            if (domhtml < tdhtml) {
+                dom.className = "validtd prevtd";
+            } else if (domhtml > tdhtml) {
+                dom.className = "validtd";
+            } else {
+                dom.className = "validtd currentd";
+            }
+        }
+    }
+}
+//上一个月
+cj.nav_prev.onclick = function () {
+    cj.date.setMonth(cj.date.getMonth() - 1);
+    fullInfo(getInfo(cj.date));
+}
+//下一个月
+cj.nav_next.onclick = function () {
+    cj.date.setMonth(cj.date.getMonth() + 1);
+    fullInfo(getInfo(cj.date));
+}
+
+//获取某年某月的信息
+var getInfo = function (date) {
+    var month = date.getMonth(), year = date.getYear() + 1900;
+    return {
+        year : year,
+        month_name : cj.month_name[month],
+        days : ((year % 4 == 0) && (year % 100 != 0 || year % 400 == 0)) ? cj.month_olympic[month] : cj.month_normal[month],
+        day_start : new Date(year, month, 1).getDay()
+    };
+}
+//填充信息
+var fullInfo = function (info) {
+    var currentdate = new Date();
+    cj.nav_month.innerHTML = info.month_name;
+    cj.nav_year.innerHTML = info.year;
+
+    var isPrev = cj.date.getTime() < currentdate.getTime();
+
+    var buf = [cj.first_tr, '<tr>'];
+    for (var i = 0; i < info.day_start + info.days; i++) {
+        if (i % 7 == 0 && i != 0) {
+            buf.push('</tr>');
+            buf.push('<tr>');
+        }
+        buf.push('<td');
+        buf.push((i < info.day_start) ? '>' : ' class="' + (isPrev ? 'validtd prevtd' : 'validtd') + '" onclick="cj.onClickTd(this)">' + (i - info.day_start + 1));
+        buf.push('</td>');
+    }
+    var last = buf[buf.length - 1];
+    if (last == '<tr>') {
+        buf.pop();
+    } else if (last == '</td>') {
+        buf.push('</tr>');
+    }
+    cj.cj_date.innerHTML = buf.join('');
+
+    if (cj.date.getMonth() == currentdate.getMonth() && cj.date.getYear() == currentdate.getYear()) {
+        cj.onClickTd(document.getElementsByClassName('validtd')[cj.date.getDate() - 1]);
+    }
+}
+
+// 获得当前日期, 并填充
+var Init = function () {
+    var info = getInfo(cj.date);
+    fullInfo(info);
+    cj.onClickTd(document.getElementsByClassName('validtd')[cj.date.getDate() - 1]);
+}
+window.onload = Init;
+</script>
+</html>
