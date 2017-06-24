@@ -50,4 +50,7 @@ sudo apt-get install cmake qt-default qtcreator
 https://www.charlesproxy.com/download/
 ;install 163music
 http://music.163.com/;/download
-
+;set user var
+sudo gedit ~/.bashrc
+source ~/.bashrc
+sudo gedit /etc/environment
