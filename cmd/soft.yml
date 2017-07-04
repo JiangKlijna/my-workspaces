@@ -1,0 +1,35 @@
+soft:
+    java: http://www.oracle.com/technetwork/java/javase/downloads/
+    kotlin: https://github.com/JetBrains/kotlin/releases
+    python: https://www.python.org/downloads/
+    golang: https://golang.org/dl
+    nodejs: https://nodejs.org/en/download/
+    
+    git: https://git-scm.com/downloads
+    idea: http://www.jetbrains.com/idea/download
+    atom: https://github.com/atom/atom/releases/
+    maven: http://maven.apache.org/download.cgi
+    cmder: https://github.com/cmderdev/cmder/releases
+    fiddler: https://www.telerik.com/download/fiddler
+    dbeaver: http://dbeaver.jkiss.org/download/
+    lantern: https://www.getlantern.org/
+    notepad++: https://notepad-plus-plus.org/
+    libreoffice: https://www.libreoffice.org/download/download/
+    postgresql: https://www.postgresql.org/download/
+
+    tim: http://tim.qq.com/
+    qqinput: http://qq.pinyin.cn/
+    qqbrowser: http://browser.qq.com/
+    qqguanjia: http://guanjia.qq.com/
+    thunder: http://dl.xunlei.com/
+    bandizip: https://www.bandisoft.com/bandizip/en/
+    baidupan: http://pan.baidu.com/download
+    cloudmusic: https://music.163.com/#/download
+    
+    rust: https://www.rust-lang.org/
+    swift: https://swift.org/getting-started/#installing-swift
+    mysql: https://dev.mysql.com/downloads/
+    httpd: http://httpd.apache.org/download.cgi
+    tomcat: http://tomcat.apache.org/
+    wildfly: http://wildfly.org/downloads/
+    
