@@ -33,3 +33,7 @@ soft:
     tomcat: http://tomcat.apache.org/
     wildfly: http://wildfly.org/downloads/
     
+    deepin: https://www.deepin.org/download/
+    ubuntu: https://www.ubuntu.com/download
+    linuxmint: https://www.linuxmint.com/download.php
+    
