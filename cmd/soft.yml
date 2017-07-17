@@ -35,5 +35,8 @@ soft:
     
     deepin: https://www.deepin.org/download/
     ubuntu: https://www.ubuntu.com/download
+    fedora: https://torrents.fedoraproject.org/
+    debian: https://www.debian.org/distrib/
+    centos: https://www.centos.org/download/
     linuxmint: https://www.linuxmint.com/download.php
     
