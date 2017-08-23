@@ -6,6 +6,10 @@ xdg-user-dirs-gtk-update
 export LANG=zh_US
 ;remove amazon
 sudo apt-get remove unity-webapps-common
+;update http://mirrors.aliyun.com/ubuntu
+sudo apt-get update
+sudo apt-get upgrade
+;Theme landscaping
 ;mirror for dl.google.com, use CDN
 gmirror.org
 ;install *.deb
