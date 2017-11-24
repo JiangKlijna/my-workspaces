@@ -3,30 +3,29 @@ object Sort {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        test(BubbleSort())
-        test(SelectSort())
-        test(InsertSort())
-        test(ShellSort())
-        test(MergeSort())
-        test(QuickSort())
-        test(HeapSort())
-        test(RadixSort())
+        test(BubbleSort::class.java)
+        test(SelectSort::class.java)
+        test(InsertSort::class.java)
+        test(ShellSort::class.java)
+        test(MergeSort::class.java)
+        test(QuickSort::class.java)
+        test(HeapSort::class.java)
+        test(RadixSort::class.java)
     }
 
-    private fun test(s: Sorter) {
-        array(digit = 1000, size = 20).let {
-            val t0 = System.currentTimeMillis()
-            s.sort(it)
-            val t1 = System.currentTimeMillis()
-            println("${s.javaClass.simpleName}\t${t1 - t0}\t${it.toList()}")
-        }
-    }
+    @JvmStatic
+    fun test(cls: Class<out Sort.Sorter>) =
+            Sort.array(digit = 1000, size = 20).let {
+                cls.newInstance().sort(it)
+                println("${cls.simpleName}\t${it.toList()}")
+            }
 
-    @JvmOverloads fun array(size: Int = 10, digit: Int = 10): IntArray {
-        return IntArray(size).apply {
-            val r = java.util.Random()
-            for (i in indices) this[i] = r.nextInt(digit)
-        }
+    @JvmStatic
+    fun array(size: Int = 10, digit: Int = 10): IntArray {
+        val r = java.util.Random()
+        val arr = IntArray(size)
+        for (i in 0 until size) arr[i] = r.nextInt(digit)
+        return arr
     }
 
     interface Sorter {
@@ -36,11 +35,11 @@ object Sort {
     //冒泡排序
     class BubbleSort : Sorter {
         override fun sort(arr: IntArray) {
-            for (i in arr.indices) {
-                for (j in i + 1..arr.size - 1) {
-                    if (arr[i] > arr[j]) {
-                        arr[i].let {
-                            arr[i] = arr[j]
+            for (i in arr.indices.reversed()) {
+                for (j in 0 until i) {
+                    if (arr[j] > arr[j + 1]) {
+                        arr[j + 1].let {
+                            arr[j + 1] = arr[j]
                             arr[j] = it
                         }
                     }
@@ -193,12 +192,13 @@ object Sort {
         override fun sort(arr: IntArray) {
             val d = maxbit(arr)
             val tmp = IntArray(arr.size)
+
             var radix = 1
-            for (i in 1..d) {
+            for (i in 1..d) { //进行d次排序
                 val count = IntArray(10)
-                for (j in arr.indices) count[(arr[j] / radix) % 10]++
-                for (j in 1..9) count[j] += count[j - 1]
-                for (j in arr.size - 1 downTo 0) tmp[--count[(arr[j] / radix) % 10]] = arr[j]
+                for (j in arr.indices) count[(arr[j] / radix) % 10]++//统计每个桶中的记录数
+                for (j in 1..9) count[j] += count[j - 1]//将tmp中的位置依次分配给每个桶
+                for (j in arr.size - 1 downTo 0) tmp[--count[(arr[j] / radix) % 10]] = arr[j]//将所有桶中记录依次收集到tmp中
                 System.arraycopy(tmp, 0, arr, 0, arr.size)
                 radix *= 10
             }
@@ -207,8 +207,8 @@ object Sort {
         private fun maxbit(arr: IntArray): Int {
             var d = 1
             var p = 10
-            for (i in arr.indices)
-                while (arr[i] >= p) {
+            for (i in arr)
+                while (i >= p) {
                     p *= 10
                     ++d
                 }
