@@ -4,21 +4,21 @@ import java.util.Random;
 
 public class Sort {
 
-    public static void main(String[] args) {
-        test(new BubbleSort());
-        test(new SelectSort());
-        test(new InsertSort());
-        test(new ShellSort());
-        test(new MergeSort());
-        test(new QuickSort());
-        test(new HeapSort());
-        test(new RadixSort());
+    public static void main(String[] args) throws Exception {
+        test(BubbleSort.class);
+        test(SelectSort.class);
+        test(InsertSort.class);
+        test(ShellSort.class);
+        test(MergeSort.class);
+        test(QuickSort.class);
+        test(HeapSort.class);
+        test(RadixSort.class);
     }
 
-    public static void test(Sorter s) {
+    public static void test(Class<? extends Sorter> cls) throws Exception {
         int[] arr = array(20, 1000);
-        s.sort(arr);
-        System.out.format("%s\t%s\n", s.getClass().getSimpleName(), Arrays.toString(arr));
+        cls.newInstance().sort(arr);
+        System.out.format("%s\t%s\n", cls.getSimpleName(), Arrays.toString(arr));
     }
 
     public static int[] array() {
@@ -44,11 +44,11 @@ public class Sort {
     public static class BubbleSort implements Sorter {
         @Override
         public void sort(int[] arr) {
-            for (int i = 0; i < arr.length; i++) {
-                for (int j = i + 1; j < arr.length; j++) {
-                    if (arr[i] > arr[j]) {
-                        int temp = arr[i];
-                        arr[i] = arr[j];
+            for (int i = arr.length - 1; i >= 0; i--) {
+                for (int j = 0; j < i; j++) {
+                    if (arr[j] > arr[j + 1]) {
+                        int temp = arr[j + 1];
+                        arr[j + 1] = arr[j];
                         arr[j] = temp;
                     }
                 }
