@@ -1,55 +1,128 @@
-def printSet(set):
-	for i in range(len(set)):
-		print(type(set),"[",i,"] = ",set[i])
 
+from random import random as rdm
 
-def Bubble(list):
-	print("\nBubbleSort:\n")
-	if type(list)!=type([]):
+random = lambda digit : int(rdm() * digit)
+
+array = lambda size=10, digit=10 : [random(digit) for e in range(size)]
+
+def test(Sort):
+	arr = array(20, 1000)
+	Sort().sort(arr)
+	print(Sort.__name__, arr, sep='\t')
+
+class Sorter(object):
+	def sort(arr): pass
+
+# 冒泡排序
+class BubbleSort(Sorter):
+	def sort(self, arr):
+		for i in range(len(arr)-1, 0, -1):
+			for j in range(0, i):
+				if arr[j] > arr[j+1]:
+					tmp = arr[j]
+					arr[j] = arr[j+1]
+					arr[j+1] = tmp
+# 选择排序
+class SelectSort(Sorter):
+	def sort(self, arr):
+		count = len(arr)
+		for i in range(0, count):
+			min = i
+			for j in range(i+1, count):
+				if arr[j] < arr[min]:
+					min = j
+			if i == min: continue
+			tmp = arr[i]
+			arr[i] = arr[min]
+			arr[min] = tmp
+# 插入排序
+class InsertSort(Sorter):
+	def sort(self, arr):
+		count = len(arr)
+		for i in range(1, count):
+			j = i - 1
+			tmp = arr[i]
+			while j >= 0 and arr[j] > tmp:
+				arr[j+1] = arr[j]
+				j -= 1
+			arr[j+1] = tmp
+# 希尔排序
+class ShellSort(Sorter):
+	def sort(self, arr):
+		count = len(arr)
+		gap = int(count/2)
+		while 1 <= gap:
+			for i in range(gap, count):
+				j = i - gap
+				tmp = arr[i]
+				while j >= 0 and arr[j] > tmp:
+					arr[j+gap] = arr[j]
+					j -= gap
+				arr[j+gap] = tmp
+			gap = int(gap/2)
+# 归并排序
+class MergeSort(Sorter):
+	def __init__(self):
+		self.sort = lambda arr : MergeSort.sort(arr, 0, len(arr)-1)
+	@staticmethod
+	def sort(arr, l, r):
+		if l >= r: return
+		m = int((l + r) / 2)
+		MergeSort.sort(arr, l, m)
+		MergeSort.sort(arr, m+1, r)
+		MergeSort.merge(arr, l, m, r)
+	@staticmethod
+	def merge(arr, l, m, r):
+		tmp = list(range(r - l + 1))
+		i, j, k = l, m+1, 0
+		while i <= m and j <= r:
+			if arr[i] < arr[j]:
+				tmp[k] = arr[i]
+				i += 1
+			else:
+				tmp[k] = arr[j]
+				j += 1
+			k += 1
+		while i <= m:
+			tmp[k] = arr[i]
+			i += 1
+			k += 1
+		while j <= r:
+			tmp[k] = arr[j]
+			j += 1
+			k += 1
+		print(tmp)
 		return
-	
-	for i in range(len(list)):
-		for j in range(1,len(list)-i):
-			if list[j]<list[j-1]:
-				temp = list[j]
-				list[j] = list[j-1]
-				list[j-1] = temp
-	
-	printSet(list)
-
-def Select(list):
-	print("\nSelectSort:\n")
-	if type(list)!=type([]):
+		for i in tmp:
+			print(i)
+			arr[i + l] = tmp[i]
+# 快速排序
+class QuickSort(Sorter):
+	def __init__(self):
+		self.sort = lambda arr : QuickSort.sort(arr, 0, len(arr))
+	@staticmethod
+	def sort(arr, l, r):
 		return
-	
-	for i in range(1,len(list)):
-		min = list[i-1];
-		tag = i-1;
-		for j in range(i,len(list)):
-			if min>list[j]:
-				min = list[j]
-				tag = j
-		temp = list[i-1]
-		list[i-1] = list[tag]
-		list[tag] = temp
-	printSet(list)
-	
-def Insert(list):
-	print("\nInsertSort:\n")
-	if type(list)!=type([]):
-		return
-	
-	for i in range(1,len(list)):
-		now = list[i]
-		j = i
-		while j>0 and now<list[j-1]:
-			list[j] = list[j-1]
-			j = j-1
-		list[j] = now
-	printSet(list)
-	
-Bubble([5,3,1,9,2,6])
-Select([5,3,1,9,2,6])
-Insert([5,3,1,9,2,6])
-
-
+		if l >= r: return
+		m = QuickSort.partition(arr, l, r)
+		QuickSort.sort(arr, l, m-1)
+		QuickSort.sort(arr, m+1, r)
+	@staticmethod
+	def partition(arr, l, r):
+		pass
+# 堆排序
+class DeapSort(Sorter):
+	def sort(self, arr):
+		pass
+	def sift(self, arr, l, r):
+		pass
+# 基数排序
+class RadixSort(Sorter):
+	def sort(self, arr):
+		pass
+	def maxbit(self, arr):
+		pass
+# main
+if __name__ == '__main__':
+	sorters = [BubbleSort, SelectSort, InsertSort, ShellSort, MergeSort, QuickSort, DeapSort, RadixSort]
+	[test(Sort) for Sort in sorters]
