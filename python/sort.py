@@ -73,29 +73,24 @@ class MergeSort(Sorter):
 		MergeSort.merge(arr, l, m, r)
 	@staticmethod
 	def merge(arr, l, m, r):
-		tmp = list(range(r - l + 1))
-		i, j, k = l, m+1, 0
+		tmp = []
+		i, j = l, m+1
 		while i <= m and j <= r:
 			if arr[i] < arr[j]:
-				tmp[k] = arr[i]
+				tmp.append(arr[i])
 				i += 1
 			else:
-				tmp[k] = arr[j]
+				tmp.append(arr[j])
 				j += 1
-			k += 1
 		while i <= m:
-			tmp[k] = arr[i]
+			tmp.append(arr[i])
 			i += 1
-			k += 1
 		while j <= r:
-			tmp[k] = arr[j]
+			tmp.append(arr[j])
 			j += 1
-			k += 1
-		print(tmp)
-		return
-		for i in tmp:
-			print(i)
-			arr[i + l] = tmp[i]
+		for i in range(r-l+1):
+			arr[i+l] = tmp[i]
+			
 # 快速排序
 class QuickSort(Sorter):
 	def __init__(self):
