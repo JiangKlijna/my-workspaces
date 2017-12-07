@@ -78,7 +78,43 @@ func (self SelectSort) sort(arr []int) {
 	}
 }
 
+type InsertSort struct{}
+
+func (self InsertSort) sort(arr []int) {
+	count := len(arr)
+	for i := 1; i < count; i++ {
+		j := i - 1
+		tmp := arr[i]
+		for j >= 0 && arr[j] > tmp {
+			arr[j+1] = arr[j]
+			j -= 1
+		}
+		arr[j+1] = tmp
+	}
+}
+
+type ShellSort struct{}
+
+func (self ShellSort) sort(arr []int) {
+	count := len(arr)
+	gap := count / 2
+	for 1 <= gap {
+		for i := gap; i < count; i++ {
+			j := i - gap
+			tmp := arr[i]
+			for j >= 0 && arr[j] > tmp {
+				arr[j+gap] = arr[j]
+				j -= gap
+			}
+			arr[j+gap] = tmp
+		}
+		gap /= 2
+	}
+}
+
 func main() {
 	test(BubbleSort{})
 	test(SelectSort{})
+	test(InsertSort{})
+	test(ShellSort{})
 }
