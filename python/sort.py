@@ -90,21 +90,31 @@ class MergeSort(Sorter):
 			j += 1
 		for i in range(r-l+1):
 			arr[i+l] = tmp[i]
-			
+
 # 快速排序
 class QuickSort(Sorter):
 	def __init__(self):
-		self.sort = lambda arr : QuickSort.sort(arr, 0, len(arr))
+		self.sort = lambda arr : QuickSort.sort(arr, 0, len(arr)-1)
 	@staticmethod
 	def sort(arr, l, r):
-		return
+		#return
 		if l >= r: return
 		m = QuickSort.partition(arr, l, r)
 		QuickSort.sort(arr, l, m-1)
 		QuickSort.sort(arr, m+1, r)
 	@staticmethod
 	def partition(arr, l, r):
-		pass
+		k = l
+		for i in range(l, r):
+			if arr[i] < arr[r]:
+				tmp = arr[i]
+				arr[i] = arr[k]
+				arr[k] = tmp
+				k += 1
+		tmp = arr[r]
+		arr[r] = arr[k]
+		arr[k] = tmp
+		return k
 # 堆排序
 class DeapSort(Sorter):
 	def sort(self, arr):
