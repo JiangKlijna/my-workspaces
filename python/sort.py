@@ -139,9 +139,24 @@ class DeapSort(Sorter):
 # 基数排序
 class RadixSort(Sorter):
 	def sort(self, arr):
-		pass
+		d, n, tmp, radix = self.maxbit(arr), len(arr), arr[:], 1
+		for i in range(1, d+1):
+			count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+			for j in range(0, n): count[int(arr[j] / radix) % 10] += 1
+			for j in range(1, 10): count[j] += count[j - 1]
+			for j in range(n-1, 0-1, -1):
+				k = int(arr[j] / radix) % 10
+				count[k] -= 1
+				tmp[count[k]] = arr[j]
+			for j in range(n): arr[j] = tmp[j]
+			radix *= 10
 	def maxbit(self, arr):
-		pass
+		d, p = 1, 10
+		for i in arr:
+			while i >= p:
+				p *= 10
+				d += 1
+		return d
 # main
 if __name__ == '__main__':
 	sorters = [BubbleSort, SelectSort, InsertSort, ShellSort, MergeSort, QuickSort, DeapSort, RadixSort]
