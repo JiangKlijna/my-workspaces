@@ -97,7 +97,6 @@ class QuickSort(Sorter):
 		self.sort = lambda arr : QuickSort.sort(arr, 0, len(arr)-1)
 	@staticmethod
 	def sort(arr, l, r):
-		#return
 		if l >= r: return
 		m = QuickSort.partition(arr, l, r)
 		QuickSort.sort(arr, l, m-1)
@@ -118,9 +117,25 @@ class QuickSort(Sorter):
 # 堆排序
 class DeapSort(Sorter):
 	def sort(self, arr):
-		pass
+		n = len(arr) - 1;
+		for i in range(int(n / 2), 0-1, -1):
+			self.sift(arr, i, n)
+		for i in range(n, 0, -1):
+			temp = arr[i]
+			arr[i] = arr[0]
+			arr[0] = temp
+			self.sift(arr, 0, i - 1)
 	def sift(self, arr, l, r):
-		pass
+		i, j, tmp = l, l * 2 + 1, arr[l]
+		while j <= r:
+			if j < r and arr[j] < arr[j + 1]:
+				j += 1
+			if tmp < arr[j]:
+				arr[i] = arr[j]
+				i = j
+				j = 2 * i + 1
+			else: break
+		arr[i] = tmp
 # 基数排序
 class RadixSort(Sorter):
 	def sort(self, arr):
