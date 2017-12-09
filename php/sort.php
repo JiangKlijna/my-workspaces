@@ -18,14 +18,20 @@ function test($sorter) {
 }
 
 interface Sorter {
-    public function sort($arr);
+    public function sort(&$arr);
 }
-
+// 冒泡排序
 class BubbleSort implements Sorter {
-
-    public function sort($arr) {
-        $n = count($arr);
-
+    public function sort(&$arr) {
+        for ($i=count($arr)-1; $i >= 0; $i--) {
+            for ($j=0; $j < $i; $j++) {
+                if ($arr[$j] > $arr[$j+1]) {
+                    $tmp = $arr[$j];
+                    $arr[$j] = $arr[$j+1];
+                    $arr[$j+1] = $tmp;
+                }
+            }
+        }
     }
 }
 
