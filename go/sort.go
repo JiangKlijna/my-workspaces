@@ -112,9 +112,49 @@ func (self ShellSort) sort(arr []int) {
 	}
 }
 
+type MergeSort struct{}
+
+func (self MergeSort) sort(arr []int) {
+	self.recursive(arr, 0, len(arr)-1)
+}
+
+func (self MergeSort) recursive(arr []int, l int, r int)  {
+	if l >= r { return }
+	m := (r + l) / 2
+	self.recursive(arr, l, m)
+	self.recursive(arr, m+1, r)
+	self.merge(arr, l, m, r)
+}
+
+func (self MergeSort) merge(arr []int, l int, m int, r int)  {
+	tmp := make([]int, 0, r - l + 1)
+	i, j := l, m+1
+	for i <= m && j <= r {
+		if arr[i] < arr[j] {
+			tmp = append(tmp, arr[i])
+			i++
+		} else {
+			tmp = append(tmp, arr[j])
+			j++
+		}
+	}
+	for i <= m {
+		tmp = append(tmp, arr[i])
+		i++
+	}
+	for j <= r {
+		tmp = append(tmp, arr[j])
+		j++
+	}
+	for i, v := range tmp {
+		arr[l+i] = v;
+	}
+}
+
 func main() {
 	test(BubbleSort{})
 	test(SelectSort{})
 	test(InsertSort{})
 	test(ShellSort{})
+	test(MergeSort{})
 }
