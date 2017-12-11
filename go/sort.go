@@ -151,10 +151,40 @@ func (self MergeSort) merge(arr []int, l int, m int, r int)  {
 	}
 }
 
+type QuickSort struct{}
+
+func (self QuickSort) sort(arr []int) {
+	self.recursive(arr, 0, len(arr)-1)
+}
+
+func (self QuickSort) recursive(arr []int, l int, r int)  {
+	if l >= r { return }
+	m := self.partition(arr, l, r)
+	self.recursive(arr, l, m-1)
+	self.recursive(arr, m+1, r)
+}
+
+func (self QuickSort) partition(arr []int, l int, r int) int {
+	m := l
+	for i := l; i < r; i++ {
+		if arr[i] < arr[r] {
+			temp := arr[i]
+			arr[i] = arr[m]
+			arr[m] = temp
+			m++
+		}
+	}
+	temp := arr[r]
+	arr[r] = arr[m]
+	arr[m] = temp
+	return m
+}
+
 func main() {
 	test(BubbleSort{})
 	test(SelectSort{})
 	test(InsertSort{})
 	test(ShellSort{})
 	test(MergeSort{})
+	test(QuickSort{})
 }
