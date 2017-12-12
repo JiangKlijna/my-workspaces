@@ -180,6 +180,34 @@ func (self QuickSort) partition(arr []int, l int, r int) int {
 	return m
 }
 
+type HeapSort struct{}
+
+func (self HeapSort) sort(arr []int) {
+	n := len(arr) - 1
+	for i := (n / 2); i >= 0; i-- {
+		self.sift(arr, i, n)
+	}
+	for i := n; i >= 1; i-- {
+		temp := arr[i]
+		arr[i] = arr[0]
+		arr[0] = temp
+		self.sift(arr, 0, i - 1)
+	}
+}
+
+func (self HeapSort) sift(arr []int, l int, r int) {
+	i, j, tmp := l, l * 2 + 1, arr[l]
+	for j <= r {
+		if j < r && arr[j] < arr[j + 1] {j++}
+		if tmp < arr[j] {
+			arr[i] = arr[j]
+			i = j
+			j = 2 * i + 1
+		} else {break}
+	}
+	arr[i] = tmp
+}
+
 func main() {
 	test(BubbleSort{})
 	test(SelectSort{})
@@ -187,4 +215,5 @@ func main() {
 	test(ShellSort{})
 	test(MergeSort{})
 	test(QuickSort{})
+	test(HeapSort{})
 }
