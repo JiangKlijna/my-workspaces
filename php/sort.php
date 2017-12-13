@@ -34,7 +34,25 @@ class BubbleSort implements Sorter {
         }
     }
 }
+// 选择排序
+class SelectSort implements Sorter {
+    public function sort(&$arr) {
+        for ($i = 0; $i < count($arr); $i++) {
+            $min = $i;
+            for ($j = $i + 1; $j < count($arr); $j++) {
+                if ($arr[$j] < $arr[$min])
+                    $min = $j;
+            }
+            if ($min != $i) {
+                $temp = $arr[$i];
+                $arr[$i] = $arr[$min];
+                $arr[$min] = $temp;
+            }
+        }
+    }
+}
 
 test(new BubbleSort());
+test(new SelectSort());
 
 ?>
