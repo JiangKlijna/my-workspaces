@@ -208,6 +208,42 @@ func (self HeapSort) sift(arr []int, l int, r int) {
 	arr[i] = tmp
 }
 
+type RadixSort struct{}
+
+func (self RadixSort) sort(arr []int) {
+	n := len(arr)
+	d, radix, tmp := self.maxbit(arr), 1, make([]int, n, n)
+	for i := 1; i <= d; i++ {
+		count := make([]int, 10, 10)
+		for j := 0; j < n; j++ {
+			count[(arr[j] / radix) % 10]++
+		}
+		for j := 1; j < 10; j++ {
+			count[j] += count[j - 1]
+		}
+		for j := n-1; j >= 0; j-- {
+			k := (arr[j] / radix) % 10
+			count[k] -= 1
+			tmp[count[k]] = arr[j]
+		}
+		for j := 0; j < n; j++ {
+			arr[j] = tmp[j]
+		}
+		radix *= 10
+	}
+}
+
+func (self RadixSort) maxbit(arr []int) int {
+	d, p := 1, 10
+	for _, i := range arr {
+		for i >= p {
+			p *= 10
+			d++
+		}
+	}
+	return d;
+}
+
 func main() {
 	test(BubbleSort{})
 	test(SelectSort{})
@@ -216,4 +252,5 @@ func main() {
 	test(MergeSort{})
 	test(QuickSort{})
 	test(HeapSort{})
+	test(RadixSort{})
 }
