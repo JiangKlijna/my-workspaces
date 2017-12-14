@@ -51,8 +51,23 @@ class SelectSort implements Sorter {
         }
     }
 }
+// 插入排序
+class InsertSort implements Sorter {
+    public function sort(&$arr) {
+        for ($i = 1; $i < count(arr); $i++) {
+            $j = $i - 1;
+            $tmp = $arr[$i];
+            while ($j >= 0 && $tmp < $arr[$j]) {
+                $arr[$j + 1] = $arr[$j];
+                $j--;
+            }
+            $arr[$j + 1] = $tmp;
+        }
+    }
+}
 
 test(new BubbleSort());
 test(new SelectSort());
+test(new InsertSort());
 
 ?>
