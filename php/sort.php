@@ -1,4 +1,5 @@
 <?php
+//https://tool.lu/coderunner/
 // 获得一个随机数组
 function random_array($size=10, $digit=10) {
     $arr = range(0, $size-1);
@@ -54,7 +55,7 @@ class SelectSort implements Sorter {
 // 插入排序
 class InsertSort implements Sorter {
     public function sort(&$arr) {
-        for ($i = 1; $i < count(arr); $i++) {
+        for ($i = 1; $i < count($arr); $i++) {
             $j = $i - 1;
             $tmp = $arr[$i];
             while ($j >= 0 && $tmp < $arr[$j]) {
@@ -65,9 +66,29 @@ class InsertSort implements Sorter {
         }
     }
 }
+// 希尔排序
+class ShellSort implements Sorter {
+    public function sort(&$arr) {
+        $n = count($arr);
+        $gap = (int)($n / 2);
+        while (1 <= $gap) {
+            for ($i = $gap; $i < $n; $i++) {
+                $j = $i - $gap;
+                $tmp = $arr[$i];
+                while ($j >= 0 && $tmp < $arr[$j]) {
+                    $arr[$j + $gap] = $arr[$j];
+                    $j -= $gap;
+                }
+                $arr[$j + $gap] = $tmp;
+            }
+            $gap = (int)($gap / 2)
+        }
+    }
+}
 
 test(new BubbleSort());
 test(new SelectSort());
 test(new InsertSort());
+test(new ShellSort());
 
 ?>
