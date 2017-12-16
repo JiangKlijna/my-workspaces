@@ -81,8 +81,28 @@ class ShellSort implements Sorter {
                 }
                 $arr[$j + $gap] = $tmp;
             }
-            $gap = (int)($gap / 2)
+            $gap = (int)($gap / 2);
         }
+    }
+}
+// 归并排序
+class MergeSort implements Sorter {
+    public function sort(&$arr) {
+        $this->recursive($arr, 0, count($arr) - 1);
+    }
+    private function recursive(&$arr, $l, $r) {
+        if ($l >= $r) return;
+        $m = (int)(($r + $l) / 2);
+        $this->recursive($arr, $l, $m);
+        $this->recursive($arr, $m+1, $r);
+        $this->merge($arr, $l, $m, $r);
+    }
+    private function merge(&$arr, $l, $m, $r) {
+        $i = $l; $j = $m + 1; $tmp = array();
+        while ($i <= $m && $j <= $r) array_push($tmp, ($arr[$i] < $arr[$j]) ? $arr[$i++] : $arr[$j++]);
+        while ($i <= $m) array_push($tmp, $arr[$i++]);
+        while ($j <= $r) array_push($tmp, $arr[$j++]);
+        foreach ($tmp as $i => $v) $arr[$l + $i] = $v;
     }
 }
 
@@ -90,5 +110,6 @@ test(new BubbleSort());
 test(new SelectSort());
 test(new InsertSort());
 test(new ShellSort());
+test(new MergeSort());
 
 ?>
