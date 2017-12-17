@@ -105,11 +105,38 @@ class MergeSort implements Sorter {
         foreach ($tmp as $i => $v) $arr[$l + $i] = $v;
     }
 }
-
+// 快速排序
+class QuickSort implements Sorter {
+    public function sort(&$arr) {
+        $this->recursive($arr, 0, count($arr) - 1);
+    }
+    private function recursive(&$arr, $l, $r) {
+        if ($l >= $r) return;
+        $m = $this->partition($arr, $l, $r);
+        $this->recursive($arr, $l, $m-1);
+        $this->recursive($arr, $m+1, $r);
+    }
+    private function partition(&$arr, $l, $r) {
+        $m = $l;
+        for ($u = $l; $u < $r; $u++) {
+            if ($arr[$u] <= $arr[$r]) {
+                $temp = $arr[$u];
+                $arr[$u] = $arr[$m];
+                $arr[$m] = $temp;
+                $m++;
+            }
+        }
+        $temp = $arr[$r];
+        $arr[$r] = $arr[$m];
+        $arr[$m] = $temp;
+        return $m;
+    }
+}
 test(new BubbleSort());
 test(new SelectSort());
 test(new InsertSort());
 test(new ShellSort());
 test(new MergeSort());
+test(new QuickSort());
 
 ?>
