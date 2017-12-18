@@ -132,11 +132,37 @@ class QuickSort implements Sorter {
         return $m;
     }
 }
+// 堆排序
+class HeapSort implements Sorter {
+    public function sort(&$arr) {
+        $n = count($arr) - 1;
+        for ($i = (int)($n / 2); $i >= 0; $i--) $this->sift($arr, $i, $n);
+        for ($i = $n; $i >= 1; $i--) {
+            $temp = $arr[$i];
+            $arr[$i] = $arr[0];
+            $arr[0] = $temp;
+            $this->sift($arr, 0, $i - 1);
+        }
+    }
+    private function sift(&$arr, $l, $r) {
+        $i = $l; $j = $l * 2 + 1; $tmp = $arr[$l];
+        while ($j <= $r) {
+            if ($j < $r && $arr[$j] < $arr[$j + 1]) $j++;
+            if ($tmp < $arr[$j]) {
+                $arr[$i] = $arr[$j];
+                $i = $j;
+                $j = 2 * $i + 1;
+            } else break;
+        }
+        $arr[$i] = $tmp;
+    }
+}
 test(new BubbleSort());
 test(new SelectSort());
 test(new InsertSort());
 test(new ShellSort());
 test(new MergeSort());
 test(new QuickSort());
+test(new HeapSort());
 
 ?>
