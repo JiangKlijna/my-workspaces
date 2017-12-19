@@ -157,6 +157,32 @@ class HeapSort implements Sorter {
         $arr[$i] = $tmp;
     }
 }
+// 基数排序
+class RadixSort implements Sorter {
+    public function sort(&$arr) {
+        $n = count($arr); $d = $this->maxbit($arr); $radix = 1;
+        $tmp = range(0, $n - 1);
+        for ($i = 1; $i <= $d; $i++) {
+            $count = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+            for ($j=0; $j < $n; $j++) $count[((int)($arr[$j] / $radix)) % 10]++;
+            for ($j=1; $j < 10; $j++) $count[$j] += $count[$j - 1];
+            for ($j=$n-1; $j >= 0 ; $j--) $tmp[--$count[((int)($arr[$j] / $radix)) % 10]] = $arr[$j];
+            for ($j=0; $j < $n; $j++) $arr[$j] = $tmp[$j];
+            $radix *= 10;
+        }
+    }
+    private function maxbit(&$arr) {
+        $d = 1; $p = 10;
+        foreach ($arr as $i) {
+            while ($i >= $p) {
+                $p *= 10;
+                $d++;
+            }
+        }
+        return $d;
+    }
+}
+
 test(new BubbleSort());
 test(new SelectSort());
 test(new InsertSort());
@@ -164,5 +190,6 @@ test(new ShellSort());
 test(new MergeSort());
 test(new QuickSort());
 test(new HeapSort());
+test(new RadixSort());
 
 ?>
