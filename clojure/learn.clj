@@ -115,6 +115,21 @@
   (println (pop (vector 3 2 1)))                            ;返回一个没有最后一个项目的新载体
   (println (subvec (vector 1 2 3 4 5 6 7) 2 5))             ;从开始和结束索引返回子载体
   )
+(defn seq-func []
+  (println (seq [1 2 3]))                                   ;创建序列
+  (println (cons 0 (seq [1 2 3])))                          ;返回一个新序列,其中'x'是第一个元素
+  (println (conj [1 2 3] 4))                                ;返回一个新序列,其中“x”是添加到序列末尾的元素
+  (println (concat (seq [1 2]) (seq [3 4])))                ;这用于将两个序列连接在一起
+  (println (distinct (seq [1 1 2 2])))                      ;用于仅确保将不同的元素添加到序列
+  (println (reverse (seq [1 2 3])))                         ;反转序列中的元素
+  (println (first (seq [1 2 3])) (last (seq [1 2 3])))      ;first last
+  (println (rest (seq [1 2 3])))                            ;返回除第一个元素之外的整个序列
+  (println (sort (seq [3 2 1])))                            ;排序
+  (println (drop 2 (seq [3 2 1])))                          ;从基于需要删除的元素数量的序列中删除元素
+  (println (take 2 (seq [3 2 1])))                          ;从序列中获取元素的第一个列表
+  (println (take-last 2 (seq [3 2 1])))                     ;从序列中获取元素的最后一个列表
+  (println (split-at 2 (seq [1 1 2 2])))                    ;将项目序列拆分为两部分,指定拆分应发生的位置
+  )
 (defn map-func []
   (def demo0 (hash-map "z" "1" "b" "2" "a" "3"))
   (def demo1 (sorted-map "z" "1" "b" "2" "a" "3"))
@@ -139,6 +154,40 @@
   (alias 'l 'clojure.core)                                  ;alias别名
   (ns-unalias 'clojure.core 'l)                             ;删除alias别名
   )
+(defn exception-func []
+  (try
+    (aget (int-array [1 2 3]) 5)
+    (catch Exception e (println (str "caught exception: " (.toString e))))
+    (finally (println "This is our final block")))
+  (try
+    (slurp "xxx.file")
+    (catch java.io.IOException e (println (str "caught ioexception: " (.toString e))))
+    (catch Exception e (println (str "caught exception: " (.toString e)))))
+  )
+(defn regular-func []
+  (def pat (re-pattern "\\d+"))
+  (println (re-find pat "abc123de"))
+  (println (clojure.string/replace "abc123de123" pat "789"))
+  (println (clojure.string/replace-first "abc123de123" pat "789"))
+  )
+(defn predicates-func []
+  (println (even? 0) (neg? 2) (odd? 3) (pos? 3))
+  (println ((every-pred number? even?) 2 4 6))
+  (println ((every-pred number? odd?) 2 4 6))
+  (println (every? even? '(2 4 6)))
+  (println (every? odd? '(2 4 6)))
+  (println (some even? '(1 2 3 4)))
+  (println (not-any? even? '(2 4 6)))
+  )
+(defn deconstruction-func []
+  (def my-vector [1 2 3 4])
+  (let [[a b c d] my-vector] (println a b c d))
+  (let [[a b c d e] my-vector] (println a b c d e))
+  (let [[a b & the-rest] my-vector] (println a b the-rest))
+  (def my-map {"a" 1 "b" 2})
+  (let [{a "a" b "b"} my-map] (println a b))
+  (let [{a "a" b "b" c "c"} my-map] (println a b c))
+  )
 (defn file-func []
   (def string1 (slurp "main.clj"))
   (println string1)
@@ -154,6 +203,11 @@
 (list-func)
 (set-func)
 (vector-func)
+(seq-func)
 (map-func)
 (namespace-func)
+(exception-func)
+(regular-func)
+(predicates-func)
+(deconstruction-func)
 ;(file-func)
