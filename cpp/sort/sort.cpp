@@ -2,6 +2,7 @@
 
 int main(void) {
 	test(new BubbleSort());
+	test(new SelectSort());
 	exit(EXIT_SUCCESS);
 	return 0;
 }
@@ -17,7 +18,7 @@ void test(Sort* s) {
 // implement IntArray
 IntArray::IntArray(int size, int digit) : length(size) {
 	arr = (int*) malloc(sizeof(int) * size);
-	srand((unsigned)time(0));
+	srand(time(0)-RANDOM(digit));
 	for(int i = 0; i < size; i++) {
 		arr[i] = RANDOM(digit);
 	}
@@ -39,7 +40,6 @@ void IntArray::print() {
 	}
 }
 
-
 // 冒泡排序
 void BubbleSort::sort(IntArray arr) {
 	for (int i = arr.size() - 1; i >= 0; i--) {
@@ -49,6 +49,21 @@ void BubbleSort::sort(IntArray arr) {
 				arr[j + 1] = arr[j];
 				arr[j] = temp;
 			}
+		}
+	}
+}
+// 选择排序
+void SelectSort::sort(IntArray arr) {
+	for (int i = 0, n = arr.size(); i < n; i++) {
+		int min = i;
+		for (int j = i + 1; j < n; j++) {
+			if (arr[j] < arr[min])
+				min = j;
+		}
+		if (min != i) {
+			int temp = arr[i];
+			arr[i] = arr[min];
+			arr[min] = temp;
 		}
 	}
 }

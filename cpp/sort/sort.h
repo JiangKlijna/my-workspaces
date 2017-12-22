@@ -28,7 +28,9 @@ public:
 void test(Sort* s);
 
 class BubbleSort : public Sort {
-public:
-	void sort(IntArray arr);
+public: void sort(IntArray arr);
+};
+class SelectSort : public Sort {
+public: void sort(IntArray arr);
 };
 #endif
