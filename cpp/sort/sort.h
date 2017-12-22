@@ -3,23 +3,32 @@
 #include <cstdio>
 #include <cstdlib>
 #include <ctime>
-#include <vector>
+#include <cstring>
 #include <typeinfo>
 
 #define RANDOM(digit) (rand() % digit)
 
-std::vector<int>* array(int size=10, int digit=10);
+class IntArray {
+public:
+    IntArray(int size=10, int digit=10);
+	~IntArray();
+    int& operator[](int index);
+	int size();
+	void print();
+private:
+	int* arr;
+	int length;
+};
 
 class Sort {
 public:
-	virtual void sort(std::vector<int>* arr) = 0;
+	virtual void sort(IntArray arr) = 0;
 };
 
 void test(Sort* s);
 
 class BubbleSort : public Sort {
 public:
-	void sort(std::vector<int>* arr);
+	void sort(IntArray arr);
 };
-
 #endif
