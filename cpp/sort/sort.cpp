@@ -3,6 +3,7 @@
 int main(void) {
 	test(new BubbleSort());
 	test(new SelectSort());
+	test(new InsertSort());
 	exit(EXIT_SUCCESS);
 	return 0;
 }
@@ -65,5 +66,17 @@ void SelectSort::sort(IntArray arr) {
 			arr[i] = arr[min];
 			arr[min] = temp;
 		}
+	}
+}
+// 插入排序
+void InsertSort::sort(IntArray arr) {
+	for (int i = 1, n = arr.size(); i < n; i++) {
+		int j = i - 1;
+		int tmp = arr[i];
+		while (j >= 0 && tmp < arr[j]) {
+			arr[j + 1] = arr[j];
+			j--;
+		}
+		arr[j + 1] = tmp;
 	}
 }

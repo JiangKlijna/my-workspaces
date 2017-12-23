@@ -33,4 +33,7 @@ public: void sort(IntArray arr);
 class SelectSort : public Sort {
 public: void sort(IntArray arr);
 };
+class InsertSort : public Sort {
+public: void sort(IntArray arr);
+};
 #endif
