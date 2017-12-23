@@ -3,7 +3,6 @@
 #include <cstdio>
 #include <cstdlib>
 #include <ctime>
-#include <cstring>
 #include <typeinfo>
 
 #define RANDOM(digit) (rand() % digit)
@@ -34,6 +33,9 @@ class SelectSort : public Sort {
 public: void sort(IntArray arr);
 };
 class InsertSort : public Sort {
+public: void sort(IntArray arr);
+};
+class ShellSort : public Sort {
 public: void sort(IntArray arr);
 };
 #endif

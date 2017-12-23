@@ -4,6 +4,7 @@ int main(void) {
 	test(new BubbleSort());
 	test(new SelectSort());
 	test(new InsertSort());
+	test(new ShellSort());
 	exit(EXIT_SUCCESS);
 	return 0;
 }
@@ -78,5 +79,22 @@ void InsertSort::sort(IntArray arr) {
 			j--;
 		}
 		arr[j + 1] = tmp;
+	}
+}
+// 希尔排序
+void ShellSort::sort(IntArray arr) {
+	int n = arr.size();
+	int gap = n / 2;
+	while (1 <= gap) {
+		for (int i = gap; i < n; i++) {
+			int j = i - gap;
+			int tmp = arr[i];
+			while (j >= 0 && tmp < arr[j]) {
+				arr[j + gap] = arr[j];
+				j -= gap;
+			}
+			arr[j + gap] = tmp;
+		}
+		gap /= 2;
 	}
 }
