@@ -45,4 +45,10 @@ private:
 	void sort(IntArray arr, int l, int r);
 	void merge(IntArray arr, int l, int m, int r);
 };
+class QuickSort : public Sort {
+public: void sort(IntArray arr);
+private:
+	void sort(IntArray arr, int l, int r);
+	int partition(IntArray arr, int l, int r);
+};
 #endif

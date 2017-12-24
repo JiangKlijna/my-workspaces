@@ -6,6 +6,7 @@ int main(void) {
 	test(new InsertSort());
 	test(new ShellSort());
 	test(new MergeSort());
+	test(new QuickSort());
 	exit(EXIT_SUCCESS);
 	return 0;
 }
@@ -125,4 +126,29 @@ void MergeSort::merge(IntArray arr, int l, int m, int r) {
 	while (i <= m) tmp[k++] = arr[i++];
 	while (j <= r) tmp[k++] = arr[j++];
 	for(int i = l; i <= r; i++) arr[i] = tmp[i-l];
+}
+// 归并排序
+void QuickSort::sort(IntArray arr) {
+	sort(arr, 0, arr.size() - 1);
+}
+void QuickSort::sort(IntArray arr, int l, int r) {
+	if (l >= r) return;
+	int m = partition(arr, l, r);
+	sort(arr, l, m - 1);
+	sort(arr, m + 1, r);
+}
+int QuickSort::partition(IntArray arr, int l, int r) {
+	int m = l;
+	for (int u = l; u < r; u++) {
+		if (arr[u] <= arr[r]) {
+			int temp = arr[u];
+			arr[u] = arr[m];
+			arr[m] = temp;
+			m++;
+		}
+	}
+	int temp = arr[r];
+	arr[r] = arr[m];
+	arr[m] = temp;
+	return m;
 }
