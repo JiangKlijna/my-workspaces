@@ -5,6 +5,7 @@ int main(void) {
 	test(new SelectSort());
 	test(new InsertSort());
 	test(new ShellSort());
+	test(new MergeSort());
 	exit(EXIT_SUCCESS);
 	return 0;
 }
@@ -12,7 +13,7 @@ int main(void) {
 void test(Sort* s) {
 	IntArray* arr = new IntArray(20, 1000);
 	s->sort(*arr);
-	printf("%s\t", typeid(*s).name()+2);
+	printf("%s\t", s->getClassName());
 	arr->print();
 	delete arr;
 }
@@ -39,6 +40,14 @@ void IntArray::print() {
 		printf((i == 0 ? "[" : ""));
 		printf("%d", arr[i]);
 		printf((i == length-1 ? "]\n" : ", "));
+	}
+}
+
+const char* Sort::getClassName(){
+	const char* name = typeid(*this).name();
+	while(1) {
+		if((*name) > '9') return name;
+		name++;
 	}
 }
 
@@ -97,4 +106,23 @@ void ShellSort::sort(IntArray arr) {
 		}
 		gap /= 2;
 	}
+}
+// 归并排序
+void MergeSort::sort(IntArray arr) {
+	sort(arr, 0, arr.size() - 1);
+}
+void MergeSort::sort(IntArray arr, int l, int r) {
+	if (l >= r) return;
+	int m = (l + r) / 2;
+	sort(arr, l, m);
+	sort(arr, m + 1, r);
+	merge(arr, l, m, r);
+}
+void MergeSort::merge(IntArray arr, int l, int m, int r) {
+	IntArray tmp(r - l + 1);
+	int i = l, j = m + 1, k = 0;
+	while (i <= m && j <= r) tmp[k++] = (arr[i] < arr[j]) ? arr[i++] : arr[j++];
+	while (i <= m) tmp[k++] = arr[i++];
+	while (j <= r) tmp[k++] = arr[j++];
+	for(int i = l; i <= r; i++) arr[i] = tmp[i-l];
 }

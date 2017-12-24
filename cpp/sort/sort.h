@@ -22,6 +22,7 @@ private:
 class Sort {
 public:
 	virtual void sort(IntArray arr) = 0;
+	const char* getClassName();
 };
 
 void test(Sort* s);
@@ -37,5 +38,11 @@ public: void sort(IntArray arr);
 };
 class ShellSort : public Sort {
 public: void sort(IntArray arr);
+};
+class MergeSort : public Sort {
+public: void sort(IntArray arr);
+private:
+	void sort(IntArray arr, int l, int r);
+	void merge(IntArray arr, int l, int m, int r);
 };
 #endif
