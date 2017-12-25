@@ -8,6 +8,7 @@ int main(void) {
 	test(new MergeSort());
 	test(new QuickSort());
 	test(new HeapSort());
+	test(new RadixSort());
 	exit(EXIT_SUCCESS);
 	return 0;
 }
@@ -21,6 +22,10 @@ void test(Sort* s) {
 }
 
 // implement IntArray
+IntArray::IntArray(int size) : length(size) {
+	arr = (int*) malloc(sizeof(int) * size);
+	for(int i = 0; i < size; i++) arr[i] = 0;
+}
 IntArray::IntArray(int size, int digit) : length(size) {
 	arr = (int*) malloc(sizeof(int) * size);
 	srand(time(0)-RANDOM(digit));
@@ -175,4 +180,28 @@ void HeapSort::sift(IntArray arr, int l, int r) {
 		} else break;
 	}
 	arr[i] = tmp;
+}
+// 基数排序
+void RadixSort::sort(IntArray arr) {
+	int d = maxbit(arr), radix = 1, n = arr.size();
+	IntArray tmp(arr.size());
+	for (int i = 1; i <= d; i++) {
+		IntArray count(10);
+		for (int j = 0; j < n; j++) count[(arr[j] / radix) % 10]++;
+		for (int j = 1; j < 10; j++) count[j] += count[j - 1];
+		for (int j = n - 1; j >= 0; j--) tmp[--count[(arr[j] / radix) % 10]] = arr[j];
+		for (int j = 0; j < n; j++) arr[j] = tmp[j];
+		radix *= 10;
+	}
+}
+int RadixSort::maxbit(IntArray arr) {
+	int d = 1, p = 10, n = arr.size();
+	for (int i = 0; i < n; i++) {
+		int v = arr[i];
+		while (v >= p) {
+			p *= 10;
+			++d;
+		}
+	}
+	return d;
 }

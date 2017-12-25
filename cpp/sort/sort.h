@@ -9,7 +9,8 @@
 
 class IntArray {
 public:
-    IntArray(int size=10, int digit=10);
+	IntArray(int size);
+    IntArray(int size, int digit);
 	~IntArray();
     int& operator[](int index);
 	int size();
@@ -54,5 +55,9 @@ private:
 class HeapSort : public Sort {
 public: void sort(IntArray arr);
 private: void sift(IntArray arr, int l, int r);
+};
+class RadixSort : public Sort {
+public: void sort(IntArray arr);
+private: int maxbit(IntArray arr);
 };
 #endif
