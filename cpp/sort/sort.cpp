@@ -7,6 +7,7 @@ int main(void) {
 	test(new ShellSort());
 	test(new MergeSort());
 	test(new QuickSort());
+	test(new HeapSort());
 	exit(EXIT_SUCCESS);
 	return 0;
 }
@@ -127,7 +128,7 @@ void MergeSort::merge(IntArray arr, int l, int m, int r) {
 	while (j <= r) tmp[k++] = arr[j++];
 	for(int i = l; i <= r; i++) arr[i] = tmp[i-l];
 }
-// 归并排序
+// 快速排序
 void QuickSort::sort(IntArray arr) {
 	sort(arr, 0, arr.size() - 1);
 }
@@ -151,4 +152,27 @@ int QuickSort::partition(IntArray arr, int l, int r) {
 	arr[r] = arr[m];
 	arr[m] = temp;
 	return m;
+}
+// 堆排序
+void HeapSort::sort(IntArray arr) {
+	int n = arr.size() - 1;
+	for (int i = (n / 2); i >= 0; i--) sift(arr, i, n);
+	for (int i = n; i >= 1; i--) {
+		int temp = arr[i];
+		arr[i] = arr[0];
+		arr[0] = temp;
+		sift(arr, 0, i - 1);
+	}
+}
+void HeapSort::sift(IntArray arr, int l, int r) {
+	int i = l, j = l * 2 + 1, tmp = arr[l];
+	while (j <= r) {
+		if (j < r && arr[j] < arr[j + 1]) j++;
+		if (tmp < arr[j]) {
+			arr[i] = arr[j];
+			i = j;
+			j = 2 * i + 1;
+		} else break;
+	}
+	arr[i] = tmp;
 }

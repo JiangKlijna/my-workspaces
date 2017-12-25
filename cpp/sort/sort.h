@@ -51,4 +51,8 @@ private:
 	void sort(IntArray arr, int l, int r);
 	int partition(IntArray arr, int l, int r);
 };
+class HeapSort : public Sort {
+public: void sort(IntArray arr);
+private: void sift(IntArray arr, int l, int r);
+};
 #endif
