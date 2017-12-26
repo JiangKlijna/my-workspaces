@@ -12,9 +12,9 @@ function random_array($size=10, $digit=10) {
 function test($sorter) {
     $arr = random_array(20, 1000);
     $sorter->sort($arr);
-    echo get_class($sorter).'    ';
+    echo get_class($sorter).'&nbsp;&nbsp;';
     foreach ($arr as $k => $v) {
-        echo ($k == 0 ? '[' : '').$v.($k == count($arr)-1 ? ']' : ', ');
+        echo ($k == 0 ? '[' : '').$v.($k == count($arr)-1 ? ']<br>' : ', ');
     }
 }
 
