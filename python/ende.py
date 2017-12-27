@@ -1,17 +1,16 @@
-import time, datetime
+from time import strftime, localtime, mktime
+from datetime import datetime
 
 format = '%S%M%H%d%m%Y'
 
-def en(data):
-	#data type is int
-	#return type is str
-	return time.strftime(format, time.localtime(data))
+#data type is int
+#return type is str
+en = lambda data: strftime(format, localtime(data))
 
-def de(data):
-	#data type is str
-	#return type is int
-	dt = datetime.datetime.strptime(data, format)
-	return int(time.mktime(dt.timetuple()))
+#data type is str
+#return type is int
+de = lambda data: int(mktime(datetime.strptime(data, format).timetuple()))
 
-print(en(331024))
-print(de(en(331024)))
+if __name__ == '__main__':
+	print(en(331024))
+	print(de(en(331024)))
