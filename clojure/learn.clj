@@ -232,6 +232,28 @@
   (println @counter)
   (shutdown-agents)
   )
+(defn watcher-func []
+  (def x (atom 0))
+  (add-watch x :watcher
+  (fn [key atom old-state new-state]
+  (println "The value of the atom has been changed")
+  (println "old-state" old-state)
+  (println "new-state" new-state)))
+  (reset! x 2)
+  (remove-watch x :watcher)
+  )
+(defn macro-func []
+  (defmacro Simple [] (println "Hello"))
+  (macroexpand '(Simple))
+  (defmacro Simple [arg] (list 2 arg))
+  (println (macroexpand '(Simple 2)))
+  )
+(defn reference-func []
+  (def my-ref (ref 1 :validator pos?))
+  (println my-ref @my-ref)
+  (dosync (ref-set my-ref 2))
+  (println @my-ref)
+  )
 (defn file-func []
   (def string1 (slurp "main.clj"))
   (println string1)
@@ -258,4 +280,7 @@
 (meta-func)
 (struct-func)
 (proxy-func)
+(watcher-func)
+(macro-func)
+(reference-func)
 ;(file-func)
