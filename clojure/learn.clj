@@ -253,6 +253,30 @@
   (println my-ref @my-ref)
   (dosync (ref-set my-ref 2))
   (println @my-ref)
+
+  (def names (ref []))
+  (defn change [newname]
+  (dosync (alter names conj newname)))
+  (change "John")
+  (change "Mark")
+  (println @names)
+
+  (def counter (ref 0))
+
+  (defn change [counter]
+  (dosync (commute counter inc)))
+  (change counter)
+  (println @counter)
+  (change counter)
+  (println @counter)
+  )
+(defn java-func []
+  (println (.toUpperCase "Hello World"))
+  (println (.indexOf "Hello World" "e"))
+  (println (new java.lang.String "Hello"))
+  (println (. Math PI))
+  (println (. System currentTimeMillis))
+  (println (.. System getProperties (get "java.version")))
   )
 (defn file-func []
   (def string1 (slurp "main.clj"))
@@ -283,4 +307,5 @@
 (watcher-func)
 (macro-func)
 (reference-func)
+(java-func)
 ;(file-func)
