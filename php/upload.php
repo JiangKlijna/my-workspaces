@@ -53,7 +53,7 @@ class UploadFile {
 	}
 }
 
-function DELETE() {
+function PUT() {
 	
 }
 
@@ -72,14 +72,14 @@ function POST() {
 }
 
 switch ($_SERVER['REQUEST_METHOD']){
+	case "GET":
+		break;
 	case "POST":
 		POST();
 		exit;
-	case "DELETE":
-		DELETE();
+	case "PUT":
+		PUT();
 		exit;
-	case "GET":
-		break;
 	default:
 		header('HTTP/1.1 404 Not Found'); 
 		echo '<title>404 Not Found</title><h1>Not Found</h1><p>The requested URL upload.php was not found on this server.</p>';
@@ -114,27 +114,52 @@ switch ($_SERVER['REQUEST_METHOD']){
 			overflow-x: hidden;
 			display: inline-block;
 		}
+		#app header {
+			padding: 10px;
+			background: none;
+			color: #50c87e;
+			font-size: 23px;
+			font-weight: 600;
+			border-bottom: 1px rgba(0,0,0,.3) solid;
+			cursor: default;
+		}
+		#app header:hover {
+			color: white;
+			background: #50c87e;
+			border-bottom: 1px #eee solid;
+		}
+		#app article {
+			padding: 10px;
+		}
 	</style>
 	<body>
 		<div id="app">
+			<header>文件列表</header>
+			<article>
+				<ul id="files"></ul>
+			</article>
 		</div>
 	</body>
 	<script>
-		// native ajax
-		var Ajax = function (method, url, callback) {
-			var xhr = new XMLHttpRequest();
-			xhr.onreadystatechange = function() {
-				if (xhr.readyState === 4) {
-					callback({
-						status: xhr.status,
-						response: xhr.response
-					});
-				}
-			}
-			xhr.open(method, url, true);
-			xhr.send(null);
-		}
+		// 先获得app dom对象
 		var app = document.getElementById('app');
+		// native ajax 闭包
+		(function(w, n){
+			var Ajax = function (method, url, callback) {
+				var xhr = new XMLHttpRequest();
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState === 4) {
+						callback({
+							status: xhr.status,
+							response: xhr.response
+						});
+					}
+				}
+				xhr.open(method, url, true);
+				xhr.send(null);
+			};
+			w[n] = Ajax;
+		})(window, 'Ajax');
 		// 调整app大小的闭包
 		(function(w, a){
 			var style = a.style;
@@ -152,5 +177,26 @@ switch ($_SERVER['REQUEST_METHOD']){
 			}
 			w.onresize();
 		})(window, app);
+		// 绘制app的闭包
+		(function(w, a, n){
+			var files = a.querySelector('#files');
+			var Draw = function(){}
+			var draw = w[n] = new Draw();
+			Draw.prototype.generate = function(list) {
+				files.innerHTML = list.toString();
+			}
+		})(window, app, 'Draw');
+		// 监听锚点的闭包
+		(function(w, n){
+			var Router = function(){}
+			var router = w[n] = new Router();
+			Router.prototype.refresh = function(hash) {
+				if (hash !== null) {
+					w.location.hash = hash;
+				}
+				
+			}
+			router.refresh(w.location.hash === '' ? '/' : null);
+		})(window, 'Router');
 	</script>
 </html>
