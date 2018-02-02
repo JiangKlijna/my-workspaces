@@ -54,11 +54,14 @@ class UploadFile {
 }
 
 function PUT() {
+	$_PUT = array();
+	parse_str(file_get_contents('php://input'), $_PUT);
 	
 }
 
 function POST() {
-	if(count($_FILES) > $GLOBALS['FILE_SIZE']) exit('[]');
+	if (empty($_FILES)) exit('[]');
+	if (count($_FILES) > $GLOBALS['FILE_SIZE']) exit('[]');
 	
 	if (!file_exists($DIR)) mkdir($GLOBALS['DIR'], 0777, true);
 	
@@ -145,18 +148,32 @@ switch ($_SERVER['REQUEST_METHOD']){
 		var app = document.getElementById('app');
 		// native ajax 闭包
 		(function(w, n){
-			var Ajax = function (method, url, callback) {
+			var objToStr = function(obj) {
+				var sb = [];
+				for (var i in obj) {
+					sb.push('&', i, '=', obj[i]);
+				}
+				sb.shift();
+				return sb.join('');
+			}
+			var Ajax = function (method, url, params, data, callback) {
+				var paramsUrl = params === null ? url : url + '?' + objToStr(params);
+				var requestBody = data === null ? data : objToStr(data);
 				var xhr = new XMLHttpRequest();
 				xhr.onreadystatechange = function() {
 					if (xhr.readyState === 4) {
 						callback({
+							url: paramsUrl,
 							status: xhr.status,
-							response: xhr.response
+							response: xhr.response,
+							requestBody: requestBody
 						});
 					}
 				}
-				xhr.open(method, url, true);
-				xhr.send(null);
+				xhr.open(method, paramsUrl, true);
+				if (data !== null)
+				xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+				xhr.send(requestBody);
 			};
 			w[n] = Ajax;
 		})(window, 'Ajax');
