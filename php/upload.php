@@ -56,7 +56,18 @@ class UploadFile {
 function PUT() {
 	$_PUT = array();
 	parse_str(file_get_contents('php://input'), $_PUT);
-	
+	switch ($_PUT['action']){
+	case 'ls':
+		$dir = $_PUT['dir'];
+		$list = scandir($dir);
+		echo json_encode($list);
+		break;
+	case 'rm':
+	case 'mv':
+	default:
+		echo "{code: 1, msg: \"Unsupported operation\"}";
+		break;
+	}
 }
 
 function POST() {
@@ -78,9 +89,11 @@ switch ($_SERVER['REQUEST_METHOD']){
 	case "GET":
 		break;
 	case "POST":
+		header('Content-Type:application/json');
 		POST();
 		exit;
 	case "PUT":
+		header('Content-Type:application/json');
 		PUT();
 		exit;
 	default:
@@ -106,6 +119,12 @@ switch ($_SERVER['REQUEST_METHOD']){
 			height: 100%;
 			text-align: center;
 			background-color: #f1f1f1;
+		}
+		body {
+			user-select:none;
+			-ms-user-select:none; /*ie*/
+			-moz-user-select:none; /*firefox*/
+			-webkit-user-select:none; /*webkit*/
 		}
 		#app {
 			text-align: left;
@@ -200,7 +219,12 @@ switch ($_SERVER['REQUEST_METHOD']){
 			var Draw = function(){}
 			var draw = w[n] = new Draw();
 			Draw.prototype.generate = function(list) {
-				files.innerHTML = list.toString();
+				var sb = [];
+				for (var i in list) {
+					var f = list[i];
+					sb.push('<li>', f, '</li>');
+				}
+				files.innerHTML = sb.join('');
 			}
 		})(window, app, 'Draw');
 		// 监听锚点的闭包
@@ -208,12 +232,16 @@ switch ($_SERVER['REQUEST_METHOD']){
 			var Router = function(){}
 			var router = w[n] = new Router();
 			Router.prototype.refresh = function(hash) {
-				if (hash !== null) {
-					w.location.hash = hash;
-				}
-				
+				w.location.hash = hash;
+				Ajax("PUT", "upload.php", null, {action: 'ls', dir: '.' + hash},
+					function(res) {
+						var list = JSON.parse(res.response);
+						w.Draw.generate(list);
+					}
+				);
 			}
-			router.refresh(w.location.hash === '' ? '/' : null);
+			var hash = w.location.hash;
+			router.refresh(hash === '' ? '/' : hash.substring(1));
 		})(window, 'Router');
 	</script>
 </html>
