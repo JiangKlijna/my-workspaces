@@ -54,18 +54,33 @@ class UploadFile {
 }
 
 function PUT() {
+	function echo_status($code, $msg, $data) {
+		echo json_encode(array(
+			"code"=>$code,
+			"msg"=>$msg,
+			"data"=>$data
+		));
+	}
 	$_PUT = array();
 	parse_str(file_get_contents('php://input'), $_PUT);
 	switch ($_PUT['action']){
 	case 'ls':
 		$dir = $_PUT['dir'];
-		$list = scandir($dir);
-		echo json_encode($list);
+		$arr = array();
+		foreach (scandir($dir) as $f) {
+			// 去掉. ..和.隐藏文件
+			if ($f[0] == '.') continue;
+			array_push($arr, array(
+				"name"=> $f,
+				"isdir"=> is_dir($f)
+			));
+		}
+		echo_status(0, "success", $arr);
 		break;
 	case 'rm':
 	case 'mv':
 	default:
-		echo "{code: 1, msg: \"Unsupported operation\"}";
+		echo_status(1, "Unsupported operation", null);
 		break;
 	}
 }
@@ -138,20 +153,31 @@ switch ($_SERVER['REQUEST_METHOD']){
 		}
 		#app header {
 			padding: 10px;
-			background: none;
-			color: #50c87e;
 			font-size: 23px;
 			font-weight: 600;
+			color: white;
+			background-color: #50c87e;
+			border-bottom: 1px #eee solid;
+		}
+		#app header:hover {
+			color: #50c87e;
+			background: none;
 			border-bottom: 1px rgba(0,0,0,.3) solid;
 			cursor: default;
 		}
-		#app header:hover {
-			color: white;
-			background: #50c87e;
-			border-bottom: 1px #eee solid;
-		}
 		#app article {
 			padding: 10px;
+		}
+		#app #files li {
+			cursor: pointer;
+			padding: 10px;
+			border-bottom: 1px #eee solid;
+			font-size: 16px;
+			border-radius: 6px;
+		}
+		#app #files li:hover {
+			background-color: #f1f1f1;
+			font-size: 17px;
 		}
 	</style>
 	<body>
@@ -185,7 +211,8 @@ switch ($_SERVER['REQUEST_METHOD']){
 							url: paramsUrl,
 							status: xhr.status,
 							response: xhr.response,
-							requestBody: requestBody
+							requestBody: requestBody,
+							body: JSON.parse(xhr.response)
 						});
 					}
 				}
@@ -218,13 +245,33 @@ switch ($_SERVER['REQUEST_METHOD']){
 			var files = a.querySelector('#files');
 			var Draw = function(){}
 			var draw = w[n] = new Draw();
+			var addOnClickFileListener = function(lis) {
+				var onClickFile = function(e) {
+					var dom = e.target;
+					var path = w.location.hash.substring(1) + '/' + dom.innerHTML;
+					if (dom.dataset.isdir === "true") {
+						Router.refresh(path);
+					} else {
+						w.open(path);
+					}
+				}
+				for(var i in lis) {
+					var li = lis[i];
+					li.onclick = onClickFile;
+				}
+			}
 			Draw.prototype.generate = function(list) {
 				var sb = [];
 				for (var i in list) {
 					var f = list[i];
-					sb.push('<li>', f, '</li>');
+					sb.push('<li data-isdir=', f.isdir, '>', f.name, '</li>');
 				}
 				files.innerHTML = sb.join('');
+				var lis = files.querySelectorAll('li');
+				addOnClickFileListener(lis);
+			}
+			Draw.prototype.onClickFile = function(e) {
+				console.log(e);
 			}
 		})(window, app, 'Draw');
 		// 监听锚点的闭包
@@ -235,8 +282,9 @@ switch ($_SERVER['REQUEST_METHOD']){
 				w.location.hash = hash;
 				Ajax("PUT", "upload.php", null, {action: 'ls', dir: '.' + hash},
 					function(res) {
-						var list = JSON.parse(res.response);
-						w.Draw.generate(list);
+						if (res.body.code === 0) {
+							w.Draw.generate(res.body.data);
+						}
 					}
 				);
 			}
