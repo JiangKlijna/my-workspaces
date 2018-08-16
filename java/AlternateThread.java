@@ -65,6 +65,7 @@ public class AlternateThread {
                         }
                     }
                 } catch (Exception e) {
+					remalloc(this);
                     throw new RuntimeException(e);
                 } finally {
                     lock.unlock();
