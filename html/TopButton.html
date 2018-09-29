@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="Author" content="jiang" />
+    <title>new TopButton</title>
+</head>
+<body>
+<script>
+    (function () {
+		if (document.getElementById("__top-button")) return;
+        var div = document.createElement("div");
+		var style = div.style;
+        style.position = "fixed";
+        style.right = "20px";
+        style.bottom = "20px";
+		style.fontSize = "3em";
+		style.backgroundColor = "#4995ea";
+		style.color = "white";
+		style.width = "40px";
+		style.height = "40px";
+		style.cursor = "pointer";
+		style.textAlign = "center";
+		div.id = "__top-button";
+        div.innerHTML = "↑";
+		div.onclick = function (){
+			var id = setInterval(function(){
+				if (scrollY === document.documentElement.scrollTop)
+					document.documentElement.scrollTop -= 30;
+				else document.body.scrollTop -= 30;
+				if (scrollY <= 0) clearInterval(id);
+			}, 1);
+		};
+		var onscroll = function (){
+			style.display = scrollY <= 10 ? "none" : "block";
+		};
+		onscroll();
+		if (document.onscroll) {
+			var prevOnScroll = document.onscroll;
+			document.onscroll = function (e) {
+				onscroll();
+				prevOnScroll(e);
+			}
+		} else document.onscroll = onscroll;
+        document.body.appendChild(div);
+    })();
+	
+	for (var i = 0; i < 100; i++) {
+		document.writeln("<p>" + i +  "</p><hr/>");
+	}
+</script>
+</body>
+</html>
