@@ -6,6 +6,7 @@ docker pull [image-name]:[version]
 docker images
 #create container by image [command]=/bin/bash
 sudo docker run -i -s --name [container-name] [image-name] [command]
+sudo docker run -d -p [port:port] --name [container-name] [image-name]
 #list all of container
 docker ps -a
 #start container
