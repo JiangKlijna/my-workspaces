@@ -2,22 +2,30 @@ package main
 
 import (
 	"fmt"
-	"time"
-	"strconv"
+	"math/rand"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
-	"strings"
 	"os"
-	"math/rand"
+	"strconv"
+	"strings"
+	"time"
 )
 
-func isNumber(s string) bool {
-	_, err := strconv.Atoi(s)
-	return err == nil
-}
+const ProxyServerRemark = `ProxyServer execute shell:
+    ProxyServer [proxy port...] [local port] (iphash|random|round)
+
+Example:
+    ProxyServer 80 8080
+	ProxyServer 8081,8082 8080 iphash
+    ProxyServer 8080,192.168.1.1:8080 80 random
+    ProxyServer 192.168.1.1:80,192.168.1.2:80 80 round`
 
 func getPorts() (string, []string) {
+	isNumber := func(s string) bool {
+		_, err := strconv.Atoi(s)
+		return err == nil
+	}
 	if len(os.Args) > 2 {
 		ports := make([]string, 0)
 		arr := strings.Split(os.Args[2], ",")
@@ -64,7 +72,7 @@ func clusterHandlerIphash(hs []http.Handler) http.Handler {
 	})
 }
 
-// 随机
+// random
 func clusterHandlerRandom(hs []http.Handler) http.Handler {
 	n := len(hs)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -72,7 +80,7 @@ func clusterHandlerRandom(hs []http.Handler) http.Handler {
 	})
 }
 
-// 轮询
+// round
 func clusterHandlerRound(hs []http.Handler) http.Handler {
 	n := len(hs)
 	i := 0
@@ -107,7 +115,7 @@ func loggingHandler(next http.Handler) http.Handler {
 			r.URL.Path,
 			time.Since(start),
 			r.RemoteAddr)
-		fmt.Print(str)
+		go fmt.Print(str)
 	})
 }
 
