@@ -7,6 +7,7 @@ import (
 	"net/http/httputil"
 	"net/url"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -21,31 +22,54 @@ Example:
     ProxyServer 8080,192.168.1.1:8080 80 random
     ProxyServer 192.168.1.1:80,192.168.1.2:80 80 round`
 
-func getPorts() (string, []string) {
+var re = regexp.MustCompile("^(\\d+|\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}:\\d+)$")
+
+type ClusterHandler func([]http.Handler) http.Handler
+
+func initParameter() ([]string, string, ClusterHandler) {
+	if len(os.Args) < 3 {
+		fmt.Print(ProxyServerRemark)
+		os.Exit(1)
+	}
+	proxyServers := strings.Split(os.Args[1], ",")
+	for _, s := range proxyServers {
+		if !re.MatchString(s) {
+			fmt.Print(ProxyServerRemark)
+			os.Exit(2)
+		}
+	}
 	isNumber := func(s string) bool {
 		_, err := strconv.Atoi(s)
 		return err == nil
 	}
-	if len(os.Args) > 2 {
-		ports := make([]string, 0)
-		arr := strings.Split(os.Args[2], ",")
-		for _, p := range arr {
-			if isNumber(p) {
-				ports = append(ports, p)
-			}
-		}
-		if len(arr) == 0 {
-			return os.Args[1], []string{"8080", "8081", "8082"}
-		} else {
-			return os.Args[1], ports
+	listeningPort := os.Args[2]
+	if !isNumber(listeningPort) {
+		fmt.Print(ProxyServerRemark)
+		os.Exit(3)
+	}
+	var clusterHandler func([]http.Handler) http.Handler
+	if len(os.Args) >= 4 {
+		switch os.Args[3] {
+		case "iphash":
+			clusterHandler = clusterHandlerIphash
+			break
+		case "random":
+			clusterHandler = clusterHandlerRandom
+			break
+		case "round":
+			clusterHandler = clusterHandlerRound
+			break
+		default:
+			fmt.Print(ProxyServerRemark)
+			os.Exit(4)
 		}
 	}
-	return "5050", []string{"8080", "8081", "8082"}
+	return proxyServers, listeningPort, clusterHandler
 }
 
-func getReverseProxies(ports []string) []http.Handler {
-	hs := make([]http.Handler, len(ports))
-	for i, port := range ports {
+func getReverseProxies(proxyServers []string) []http.Handler {
+	hs := make([]http.Handler, len(proxyServers))
+	for i, port := range proxyServers {
 		targetUrl, _ := url.Parse("http://127.0.0.1:" + port)
 		hs[i] = httputil.NewSingleHostReverseProxy(targetUrl)
 	}
@@ -93,17 +117,6 @@ func clusterHandlerRound(hs []http.Handler) http.Handler {
 	})
 }
 
-func clusterHandler(hs []http.Handler) http.Handler {
-	n := len(hs)
-	if n == 1 {
-		return hs[0]
-	}
-	fs := [3]func(hs []http.Handler) http.Handler{
-		clusterHandlerRound, clusterHandlerRandom, clusterHandlerIphash,
-	}
-	return fs[rand.Intn(3)%3](hs)
-}
-
 func loggingHandler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
@@ -120,8 +133,8 @@ func loggingHandler(next http.Handler) http.Handler {
 }
 
 func main() {
-	listeningPort, proxyPort := getPorts()
+	proxyServers, listeningPort, clusterHandler := initParameter()
 	fmt.Println("> Listening at http://127.0.0.1:" + listeningPort)
-	http.Handle("/", loggingHandler(clusterHandler(getReverseProxies(proxyPort))))
+	http.Handle("/", loggingHandler(clusterHandler(getReverseProxies(proxyServers))))
 	http.ListenAndServe(":"+listeningPort, nil)
 }
