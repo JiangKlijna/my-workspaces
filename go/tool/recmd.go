@@ -1,4 +1,4 @@
-//go build -ldflags "-s -w" recmd.go && recmd.exe && go clean
+//go build -ldflags "-s -w" logcmd.go && recmd.exe && go clean
 package main
 
 import (
@@ -13,7 +13,7 @@ import (
 )
 
 const remark = `repeat execute shell:
-    recmd [shell] [time(h|m|s)]
+    recmd [shell] [time(h|m|s)] (|async)
 
 Example:
     recmd "python Test.py" 10m
@@ -59,19 +59,23 @@ func parseTime(s string) time.Duration {
 	}
 }
 
-func initParameter() ([]string, time.Duration) {
+func initParameter() ([]string, time.Duration, bool) {
 	args := os.Args
 	if len(args) < 3 {
 		fmt.Println(remark)
 		os.Exit(-1)
 	}
-	return strings.Split(args[1], " "), parseTime(args[2])
+	return strings.Split(args[1], " "), parseTime(args[2]), args[3] == "async"
 }
 
 func main() {
-	cmd, dur := initParameter()
-	for i := 0; true; i++ {
-		go invoke(cmd)
+	cmd, dur, isAsync := initParameter()
+	for {
+		if isAsync {
+			go invoke(cmd)
+		} else {
+			invoke(cmd)
+		}
 		time.Sleep(dur)
 	}
 }
