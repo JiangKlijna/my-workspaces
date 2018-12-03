@@ -2,6 +2,7 @@
 package main
 
 import (
+	"net/url"
 	"os"
 	"fmt"
 	"bytes"
@@ -56,8 +57,8 @@ func (self *Result) String() string {
 }
 
 type Compile struct {
-	lang_str string
-	lang_num string
+	langStr string
+	langNum string
 }
 
 var compiles = map[string]*Compile{
@@ -95,9 +96,9 @@ func (self *Compile) Params() ([]byte, error) {
 	}
 	buf := bytes.Buffer{}
 	buf.WriteString("language=")
-	buf.WriteString(self.lang_num)
+	buf.WriteString(self.langNum)
 	buf.WriteString("&code=")
-	buf.Write(data)
+	buf.WriteString(url.QueryEscape(string(data)))
 	return buf.Bytes(), nil
 }
 
@@ -107,7 +108,7 @@ func (self *Compile) Request(params []byte) (*http.Response, error) {
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
 	req.Header.Add("Host", "m.runoob.com")
 	req.Header.Add("Origin", "https://c.runoob.com")
-	req.Header.Add("Referer", "https://c.runoob.com/compile/"+self.lang_num)
+	req.Header.Add("Referer", "https://c.runoob.com/compile/"+self.langNum)
 
 	resp, err := (&http.Client{}).Do(req)
 	if err != nil {
@@ -137,7 +138,6 @@ func (self *Compile) Run() int {
 	if err != nil {
 		return 1
 	}
-	fmt.Println(string(params))
 	reps, err := self.Request(params)
 	if err != nil {
 		return 2
@@ -146,12 +146,11 @@ func (self *Compile) Run() int {
 	if err != nil {
 		return 3
 	}
-	fmt.Println(res)
-	//if (*res)["output"] == "" {
-	//	fmt.Print((*res)["errors"])
-	//} else {
-	//	fmt.Print((*res)["output"])
-	//}
+	if res.Output == "" {
+		fmt.Print(res.Errors)
+	} else {
+		fmt.Print(res.Output)
+	}
 	return 0
 }
 
