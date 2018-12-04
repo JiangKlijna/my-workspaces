@@ -48,7 +48,9 @@ func initParameter() ([]string, string, ClusterHandler) {
 		os.Exit(3)
 	}
 	var clusterHandler func([]http.Handler) http.Handler
-	if len(os.Args) >= 4 {
+	if len(proxyServers) == 1 {
+		clusterHandler = clusterHandlerSingle
+	} else if len(os.Args) >= 4 {
 		switch os.Args[3] {
 		case "iphash":
 			clusterHandler = clusterHandlerIphash
@@ -120,6 +122,11 @@ func clusterHandlerRound(hs []http.Handler) http.Handler {
 		hs[i].ServeHTTP(w, r)
 		i++
 	})
+}
+
+//single
+func clusterHandlerSingle(hs []http.Handler) http.Handler {
+	return hs[0]
 }
 
 func loggingHandler(next http.Handler) http.Handler {
