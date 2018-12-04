@@ -69,8 +69,13 @@ func initParameter() ([]string, string, ClusterHandler) {
 
 func getReverseProxies(proxyServers []string) []http.Handler {
 	hs := make([]http.Handler, len(proxyServers))
-	for i, port := range proxyServers {
-		targetUrl, _ := url.Parse("http://127.0.0.1:" + port)
+	for i, server := range proxyServers {
+		var targetUrl *url.URL
+		if strings.Contains(server, ":") {
+			targetUrl, _ = url.Parse("http://" + server)
+		} else {
+			targetUrl, _ = url.Parse("http://127.0.0.1:" + server)
+		}
 		hs[i] = httputil.NewSingleHostReverseProxy(targetUrl)
 	}
 	return hs
