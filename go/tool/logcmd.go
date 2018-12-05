@@ -21,6 +21,14 @@ Example:
     logcmd xxx.exe exe.log d
     logcmd ls ls.log m`
 
+type LogOuter struct {
+	TimeLayout  string
+	LogFileName string
+}
+
+func (o *LogOuter) print(line string)  {
+}
+
 func invoke(sh []string) {
 	//CombinedOutput
 	cmd := exec.Command(sh[0], sh[1:]...)
@@ -33,6 +41,7 @@ func invoke(sh []string) {
 	cmd.Start()
 	reader := bufio.NewReader(stdout)
 	for {
+		reader.ReadLine()
 		line, err2 := reader.ReadString('\n')
 		if err2 != nil || io.EOF == err2 {
 			break
