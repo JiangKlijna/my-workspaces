@@ -12,13 +12,14 @@ import (
 	"time"
 )
 
-const remark = `repeat execute shell:
-    logcmd [shell] [time(y|M|d|h|m|s)]
+const LogcmdRemark = `record the execution result of the command by time
+	logcmd execute shell:
+    logcmd [shell] [output] [time(y|M|d|h|m|s)]
 
 Example:
-    logcmd "python Test.py" M
-    logcmd xxx.exe d
-    logcmd ls m`
+    logcmd "python Test.py" py.log M
+    logcmd xxx.exe exe.log d
+    logcmd ls ls.log m`
 
 func invoke(sh []string) {
 	//CombinedOutput
@@ -53,7 +54,7 @@ func parseTime(s string) time.Duration {
 	case 's':
 		return time.Duration(i) * time.Second
 	default:
-		fmt.Println(remark)
+		fmt.Println(LogcmdRemark)
 		os.Exit(-1)
 		return time.Duration(0)
 	}
@@ -62,7 +63,7 @@ func parseTime(s string) time.Duration {
 func initParameter() ([]string, time.Duration) {
 	args := os.Args
 	if len(args) < 3 {
-		fmt.Println(remark)
+		fmt.Println(LogcmdRemark)
 		os.Exit(-1)
 	}
 	return strings.Split(args[1], " "), parseTime(args[2])
