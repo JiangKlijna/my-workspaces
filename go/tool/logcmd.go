@@ -7,9 +7,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
-	"strconv"
 	"strings"
-	"time"
 )
 
 const LogcmdRemark = `record the execution result of the command by time
@@ -29,7 +27,7 @@ type LogOuter struct {
 func (o *LogOuter) print(line string) {
 }
 
-func invoke(cmd *exec.Cmd) {
+func (o *LogOuter) invoke(cmd *exec.Cmd) {
 	//CombinedOutput
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
@@ -50,23 +48,6 @@ func invoke(cmd *exec.Cmd) {
 	cmd.Wait()
 }
 
-func parseTime(s string) time.Duration {
-	n := len(s) - 1
-	i, _ := strconv.ParseInt(s[0:n], 10, 64)
-	switch s[n] {
-	case 'h':
-		return time.Duration(i) * time.Hour
-	case 'm':
-		return time.Duration(i) * time.Minute
-	case 's':
-		return time.Duration(i) * time.Second
-	default:
-		fmt.Println(LogcmdRemark)
-		os.Exit(-1)
-		return time.Duration(0)
-	}
-}
-
 func initParameter() (*exec.Cmd, *LogOuter) {
 	args := os.Args
 	if len(args) < 3 {
@@ -79,6 +60,5 @@ func initParameter() (*exec.Cmd, *LogOuter) {
 
 func main() {
 	cmd, out := initParameter()
-	invoke(cmd)
-	print(out)
+	out.invoke(cmd)
 }
