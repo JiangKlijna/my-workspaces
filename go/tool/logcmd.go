@@ -26,13 +26,11 @@ type LogOuter struct {
 	LogFileName string
 }
 
-func (o *LogOuter) print(line string)  {
+func (o *LogOuter) print(line string) {
 }
 
-func invoke(sh []string) {
+func invoke(cmd *exec.Cmd) {
 	//CombinedOutput
-	cmd := exec.Command(sh[0], sh[1:]...)
-	fmt.Println(sh)
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		fmt.Println(err)
@@ -69,16 +67,18 @@ func parseTime(s string) time.Duration {
 	}
 }
 
-func initParameter() ([]string, time.Duration) {
+func initParameter() (*exec.Cmd, *LogOuter) {
 	args := os.Args
 	if len(args) < 3 {
 		fmt.Println(LogcmdRemark)
 		os.Exit(-1)
 	}
-	return strings.Split(args[1], " "), parseTime(args[2])
+	sh := strings.Split(args[1], " ")
+	return exec.Command(sh[0], sh[1:]...), nil
 }
 
 func main() {
-	cmd, _ := initParameter()
+	cmd, out := initParameter()
 	invoke(cmd)
+	print(out)
 }
