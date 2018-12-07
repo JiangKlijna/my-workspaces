@@ -25,6 +25,7 @@ type LogOuter struct {
 }
 
 func (o *LogOuter) print(line string) {
+	fmt.Println(line)
 }
 
 func (o *LogOuter) invoke(cmd *exec.Cmd) {
@@ -42,9 +43,8 @@ func (o *LogOuter) invoke(cmd *exec.Cmd) {
 		if err2 != nil || io.EOF == err2 {
 			break
 		}
-		fmt.Print(line)
+		go o.print(line)
 	}
-	fmt.Println()
 	cmd.Wait()
 }
 
