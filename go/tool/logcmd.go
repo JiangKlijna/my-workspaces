@@ -24,6 +24,10 @@ type LogOuter struct {
 	LogFileName string
 }
 
+func NewLogOuter(logFile string, timeTemp string) *LogOuter {
+	return nil
+}
+
 func (o *LogOuter) print(line string) {
 	fmt.Println(line)
 }
@@ -50,12 +54,12 @@ func (o *LogOuter) invoke(cmd *exec.Cmd) {
 
 func initParameter() (*exec.Cmd, *LogOuter) {
 	args := os.Args
-	if len(args) < 3 {
+	if len(args) < 4 {
 		fmt.Println(LogcmdRemark)
 		os.Exit(-1)
 	}
 	sh := strings.Split(args[1], " ")
-	return exec.Command(sh[0], sh[1:]...), nil
+	return exec.Command(sh[0], sh[1:]...), NewLogOuter(args[2], args[3])
 }
 
 func main() {
