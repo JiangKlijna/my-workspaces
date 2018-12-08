@@ -19,6 +19,15 @@ Example:
     logcmd xxx.exe exe.log d
     logcmd ls ls.log m`
 
+var timeLayouts = map[string]string{
+	"y": "2006",
+	"M": "2006-01",
+	"d": "2006-01-02",
+	"h": "2006-01-02+15",
+	"m": "2006-01-02+15:04",
+	"s": "2006-01-02+15:04:05",
+}
+
 type LogOuter struct {
 	TimeLayout  string
 	LogFileName string
