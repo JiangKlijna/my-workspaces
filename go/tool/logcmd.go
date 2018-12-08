@@ -61,17 +61,17 @@ func (o *LogOuter) invoke(cmd *exec.Cmd) {
 	cmd.Wait()
 }
 
-func initParameter() (*exec.Cmd, *LogOuter) {
+func initParameter() (*LogOuter, *exec.Cmd) {
 	args := os.Args
 	if len(args) < 4 {
 		fmt.Println(LogcmdRemark)
 		os.Exit(-1)
 	}
 	sh := strings.Split(args[1], " ")
-	return exec.Command(sh[0], sh[1:]...), NewLogOuter(args[2], args[3])
+	return NewLogOuter(args[2], args[3]), exec.Command(sh[0], sh[1:]...)
 }
 
 func main() {
-	cmd, out := initParameter()
+	out, cmd := initParameter()
 	out.invoke(cmd)
 }
