@@ -33,10 +33,6 @@ type LogOuter struct {
 	LogFileName string
 }
 
-func NewLogOuter(logFile string, timeTemp string) *LogOuter {
-	return nil
-}
-
 func (o *LogOuter) print(line string) {
 	fmt.Println(line)
 }
@@ -67,8 +63,13 @@ func initParameter() (*LogOuter, *exec.Cmd) {
 		fmt.Println(LogcmdRemark)
 		os.Exit(-1)
 	}
+	tl, ok := timeLayouts[args[3]]
+	if !ok {
+		fmt.Println(LogcmdRemark)
+		os.Exit(-2)
+	}
 	sh := strings.Split(args[1], " ")
-	return NewLogOuter(args[2], args[3]), exec.Command(sh[0], sh[1:]...)
+	return &LogOuter{tl, args[2]}, exec.Command(sh[0], sh[1:]...)
 }
 
 func main() {
