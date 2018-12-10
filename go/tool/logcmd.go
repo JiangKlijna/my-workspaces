@@ -5,9 +5,11 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"strings"
+	"time"
 )
 
 const LogcmdRemark = `record the execution result of the command by time
@@ -15,9 +17,9 @@ const LogcmdRemark = `record the execution result of the command by time
     logcmd [shell] [output] [time(y|M|d|h|m|s)]
 
 Example:
-    logcmd "python Test.py" py.log M
-    logcmd xxx.exe exe.log d
-    logcmd ls ls.log m`
+    logcmd "python Test.py" file M
+    logcmd xxx.exe fn d
+    logcmd ls f m`
 
 var timeLayouts = map[string]string{
 	"y": "2006",
@@ -33,8 +35,12 @@ type LogOuter struct {
 	LogFileName string
 }
 
-func (o *LogOuter) print(line string) {
-	fmt.Println(line)
+func (o *LogOuter) print(line string, time time.Time) {
+	filename := fmt.Sprintf("%s.%s.log", o.LogFileName, time.Format(o.TimeLayout))
+	err := ioutil.WriteFile(filename, []byte(line), os.ModeAppend)
+	if err != nil {
+		fmt.Println(err)
+	}
 }
 
 func (o *LogOuter) invoke(cmd *exec.Cmd) {
@@ -52,7 +58,7 @@ func (o *LogOuter) invoke(cmd *exec.Cmd) {
 		if err2 != nil || io.EOF == err2 {
 			break
 		}
-		go o.print(line)
+		go o.print(line, time.Now())
 	}
 	cmd.Wait()
 }
@@ -61,12 +67,12 @@ func initParameter() (*LogOuter, *exec.Cmd) {
 	args := os.Args
 	if len(args) < 4 {
 		fmt.Println(LogcmdRemark)
-		os.Exit(-1)
+		os.Exit(1)
 	}
 	tl, ok := timeLayouts[args[3]]
 	if !ok {
 		fmt.Println(LogcmdRemark)
-		os.Exit(-2)
+		os.Exit(2)
 	}
 	sh := strings.Split(args[1], " ")
 	return &LogOuter{tl, args[2]}, exec.Command(sh[0], sh[1:]...)
