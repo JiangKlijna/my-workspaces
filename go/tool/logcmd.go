@@ -26,8 +26,8 @@ var timeLayouts = map[string]string{
 	"M": "2006-01",
 	"d": "2006-01-02",
 	"h": "2006-01-02+15",
-	"m": "2006-01-02+15:04",
-	"s": "2006-01-02+15:04:05",
+	"m": "2006-01-02+15~04",
+	"s": "2006-01-02+15~04~05",
 }
 
 type LogOuter struct {
@@ -53,7 +53,6 @@ func (o *LogOuter) invoke(cmd *exec.Cmd) {
 	cmd.Start()
 	reader := bufio.NewReader(stdout)
 	for {
-		reader.ReadLine()
 		line, err2 := reader.ReadString('\n')
 		if err2 != nil || io.EOF == err2 {
 			break
