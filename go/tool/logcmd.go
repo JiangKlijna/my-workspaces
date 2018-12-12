@@ -10,6 +10,7 @@ import (
 	"os/exec"
 	"strings"
 	"time"
+	"log"
 )
 
 const LogcmdRemark = `record the execution result of the command by time
@@ -39,7 +40,7 @@ func (o *LogOuter) print(line string, time time.Time) {
 	filename := fmt.Sprintf("%s.%s.log", o.LogFileName, time.Format(o.TimeLayout))
 	err := ioutil.WriteFile(filename, []byte(line), os.ModeAppend)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
 }
 
@@ -47,14 +48,17 @@ func (o *LogOuter) invoke(cmd *exec.Cmd) {
 	//CombinedOutput
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return
 	}
 	cmd.Start()
 	reader := bufio.NewReader(stdout)
 	for {
 		line, err2 := reader.ReadString('\n')
-		if err2 != nil || io.EOF == err2 {
+		if err2 != nil {
+			if io.EOF != err2 {
+				log.Println(err2)
+			}
 			break
 		}
 		go o.print(line, time.Now())
