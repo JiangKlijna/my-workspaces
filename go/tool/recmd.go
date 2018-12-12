@@ -65,7 +65,7 @@ func initParameter() ([]string, time.Duration, bool) {
 		fmt.Println(remark)
 		os.Exit(-1)
 	}
-	return strings.Split(args[1], " "), parseTime(args[2]), args[3] == "async"
+	return strings.Split(args[1], " "), parseTime(args[2]), len(args) == 4 && args[3] == "async"
 }
 
 func main() {
