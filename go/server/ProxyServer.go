@@ -22,7 +22,7 @@ Example:
     ProxyServer 8080,192.168.1.1:8080 80 random
     ProxyServer 192.168.1.1:80,192.168.1.2:80 80 round`
 
-var re = regexp.MustCompile("^(\\d+|\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}:\\d+)$")
+var re = regexp.MustCompile("^(\\d+|\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}:\\d+|http.+)$")
 
 type ClusterHandler func([]http.Handler) http.Handler
 
@@ -73,10 +73,17 @@ func getReverseProxies(proxyServers []string) []http.Handler {
 	hs := make([]http.Handler, len(proxyServers))
 	for i, server := range proxyServers {
 		var targetUrl *url.URL
-		if strings.Contains(server, ":") {
-			targetUrl, _ = url.Parse("http://" + server)
+		var err error
+		if strings.HasPrefix(server, "http") {
+			targetUrl, err = url.Parse(server)
+		} else if strings.Contains(server, ":") {
+			targetUrl, err = url.Parse("http://" + server)
 		} else {
-			targetUrl, _ = url.Parse("http://127.0.0.1:" + server)
+			targetUrl, err = url.Parse("http://127.0.0.1:" + server)
+		}
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(5)
 		}
 		hs[i] = httputil.NewSingleHostReverseProxy(targetUrl)
 	}
