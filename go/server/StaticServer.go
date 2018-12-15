@@ -1,12 +1,21 @@
 //go build -ldflags "-s -w" HttpServer.go
 package main
 import (
-	"os"
 	"fmt"
-	"time"
 	"net/http"
+	"os"
 	"strconv"
+	"time"
 )
+
+const StaticServerRemark = `StaticServer execute shell:
+    StaticServer [port=80] [path=.]
+
+Example:
+	StaticServer 80 .
+    StaticServer 8080 ~
+	StaticServer 9090 static`
+
 
 func isNumber(s string) bool {
 	_, err := strconv.Atoi(s)
