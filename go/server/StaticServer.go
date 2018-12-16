@@ -1,5 +1,6 @@
 //go build -ldflags "-s -w" HttpServer.go
 package main
+
 import (
 	"fmt"
 	"net/http"
@@ -16,17 +17,30 @@ Example:
     StaticServer 8080 ~
 	StaticServer 9090 static`
 
-
-func isNumber(s string) bool {
-	_, err := strconv.Atoi(s)
-	return err == nil
-}
-
-func getPort() string {
-	if len(os.Args) > 1 && isNumber(os.Args[1]) {
-		return os.Args[1]
+// return port and path
+func initParameter() (int, string) {
+	n := len(os.Args)
+	if n <= 1 {
+		fmt.Println(StaticServerRemark)
+		os.Exit(1)
 	}
-	return "5050"
+	port, err := strconv.Atoi(os.Args[1])
+	if n == 2 {
+		if err != nil {
+			return 80, os.Args[1]
+		}
+		return port, "."
+	} else {
+		if err != nil {
+			port, err = strconv.Atoi(os.Args[2])
+			if err != nil {
+				fmt.Println(StaticServerRemark)
+				os.Exit(2)
+			}
+			return port, os.Args[1]
+		}
+		return port, os.Args[2]
+	}
 }
 
 func loggingHandler(next http.Handler) http.Handler {
@@ -45,8 +59,8 @@ func loggingHandler(next http.Handler) http.Handler {
 }
 
 func main() {
-	port := getPort()
-	fmt.Println("> Listening at http://127.0.0.1:" + port)
-	http.Handle("/", loggingHandler(http.FileServer(http.Dir("./"))))
-	http.ListenAndServe(":" + port, nil)
+	port, path := initParameter()
+	fmt.Println("> Listening at http://127.0.0.1:" + string(port))
+	http.Handle("/", loggingHandler(http.FileServer(http.Dir(path))))
+	http.ListenAndServe(":"+string(port), nil)
 }
