@@ -1,4 +1,4 @@
-//go build -ldflags "-s -w" HttpServer.go
+//go build -ldflags "-s -w" -o ss.exe StaticServer.go
 package main
 
 import (
@@ -10,26 +10,27 @@ import (
 )
 
 const StaticServerRemark = `StaticServer execute shell:
-    StaticServer [port=80] [path=.]
+	StaticServer [port=2018] [path=.]
 
 Example:
-	StaticServer 80 .
-    StaticServer 8080 ~
+	StaticServer 2018 .
+	StaticServer 8080 ~
 	StaticServer 9090 static`
 
 // return port and path
 func initParameter() (int, string) {
+	const defaultPort = 2018
+	const defaultPath = "."
 	n := len(os.Args)
 	if n <= 1 {
-		fmt.Println(StaticServerRemark)
-		os.Exit(1)
+		return defaultPort, defaultPath
 	}
 	port, err := strconv.Atoi(os.Args[1])
 	if n == 2 {
 		if err != nil {
-			return 80, os.Args[1]
+			return defaultPort, os.Args[1]
 		}
-		return port, "."
+		return port, defaultPath
 	} else {
 		if err != nil {
 			port, err = strconv.Atoi(os.Args[2])
@@ -60,7 +61,8 @@ func loggingHandler(next http.Handler) http.Handler {
 
 func main() {
 	port, path := initParameter()
-	fmt.Println("> Listening at http://127.0.0.1:" + string(port))
+	portStr := strconv.Itoa(port)
+	fmt.Println("> Listening at http://127.0.0.1:" + portStr)
 	http.Handle("/", loggingHandler(http.FileServer(http.Dir(path))))
-	http.ListenAndServe(":"+string(port), nil)
+	http.ListenAndServe(":"+portStr, nil)
 }
