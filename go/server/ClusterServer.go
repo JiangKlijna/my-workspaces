@@ -1,13 +1,20 @@
-//go build -ldflags "-s -w" ClusterServer.go
+//go build -ldflags "-s -w" -o cs.exe ClusterServer.go
 package main
 
 import (
-	"os"
 	"fmt"
-	"time"
 	"net/http"
+	"os"
 	"strconv"
+	"time"
 )
+
+const ClusterServerRemark = `ClusterServer execute shell:
+	ClusterServer [local port...]
+
+Example:
+	ClusterServer 80 8080
+	ClusterServer 8081 8082 8082`
 
 var ico = []byte{
 	137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 0, 0, 0, 16, 0, 0, 0, 16, 8, 6, 0, 0, 0, 31, 243, 255, 97, 0, 0, 0, 51, 73, 68, 65, 84, 120, 156, 99, 248, 240, 225, 195, 127, 74, 48, 3, 186, 192, 196, 235, 115, 225, 24, 159, 216, 32, 54, 128, 226, 48, 24, 169, 6, 32, 135, 50, 41, 120, 144, 26, 128, 45, 81, 225, 75, 104, 131, 196, 0, 74, 48, 0, 42, 31, 140, 146, 20, 142, 145, 240, 0, 0, 0, 0, 73, 69, 78, 68, 174, 66, 96, 130,
@@ -26,20 +33,23 @@ var html [12][]byte = [12][]byte{
 	[]byte("</table></body></html>"),
 }
 
-func isNumber(s string) bool {
-	_, err := strconv.Atoi(s)
-	return err == nil
-}
-
-func getPorts() []string {
+func initParameter() []string {
 	if len(os.Args) <= 1 {
-		return []string{"8080", "8081", "8082"};
+		fmt.Print(ClusterServerRemark)
+		os.Exit(1)
+	}
+	isNumber := func(s string) bool {
+		_, err := strconv.Atoi(s)
+		return err == nil
 	}
 	ports := make([]string, 0)
 	for i := 1; i < len(os.Args); i++ {
-		if isNumber(os.Args[i]) {
-			ports = append(ports, os.Args[i])
+		port := os.Args[i]
+		if !isNumber(port) {
+			fmt.Print(ClusterServerRemark)
+			os.Exit(2)
 		}
+		ports = append(ports, os.Args[i])
 	}
 	return ports
 }
@@ -99,7 +109,7 @@ func server(port string) {
 
 func main() {
 	done := make(chan bool)
-	ports := getPorts()
+	ports := initParameter()
 	for _, port := range ports {
 		go server(port)
 	}
