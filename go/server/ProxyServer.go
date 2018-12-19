@@ -1,3 +1,4 @@
+//go build -ldflags "-s -w" -o ps.exe ProxyServer.go
 package main
 
 import (
@@ -14,13 +15,13 @@ import (
 )
 
 const ProxyServerRemark = `ProxyServer execute shell:
-    ProxyServer [proxy port...] [local port] (iphash|random|round)
+	ProxyServer [proxy port...] [local port] (iphash|random|round)
 
 Example:
-    ProxyServer 80 8080
+	ProxyServer 80 8080
 	ProxyServer 8081,8082 8080 iphash
-    ProxyServer 8080,192.168.1.1:8080 80 random
-    ProxyServer 192.168.1.1:80,192.168.1.2:80 80 round`
+	ProxyServer 8080,192.168.1.1:8080 80 random
+	ProxyServer 192.168.1.1:80,192.168.1.2:80 80 round`
 
 var re = regexp.MustCompile("^(\\d+|\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}:\\d+|http.+)$")
 
@@ -50,6 +51,8 @@ func initParameter() ([]string, string, ClusterHandler) {
 	var clusterHandler func([]http.Handler) http.Handler
 	if len(proxyServers) == 1 {
 		clusterHandler = clusterHandlerSingle
+	} else if len(os.Args) == 3 {
+		clusterHandler = clusterHandlerRound
 	} else if len(os.Args) >= 4 {
 		switch os.Args[3] {
 		case "iphash":
