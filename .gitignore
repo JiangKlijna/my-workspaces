@@ -14,7 +14,7 @@
 
 #python
 *.pyc
-*/__pycache__/
+__pycache__/
 
 #eclipse
 */.classpath
@@ -22,11 +22,17 @@
 */.settings
 
 #intellij
-*/.idea/
-*/target/
-*/build/
+out/
+.idea/
+target/
+build/
 *.log
 
 #extra
-*/test/
+test/
 *.ppm
+*.db
+
+#golang
+go.mod
+go.sum
