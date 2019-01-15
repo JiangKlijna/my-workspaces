@@ -31,3 +31,19 @@
 [Times.java](https://github.com/JiangKlijna/my-workspaces/blob/master/java/Times.java)|操作时间-解释器模式
 [Tuple.java](https://github.com/JiangKlijna/my-workspaces/blob/master/java/Tuple.java)|java元组
 
+- Html
+
+文件|说明
+----|----
+[2048.html](https://github.com/JiangKlijna/my-workspaces/blob/master/html/AlternateThread.html)|2048小游戏
+[calendar.html](https://github.com/JiangKlijna/my-workspaces/blob/master/html/calendar.html)|日历展示
+[color_obj.html](https://github.com/JiangKlijna/my-workspaces/blob/master/html/color_obj.html)|颜色格式转换
+[hex.html](https://github.com/JiangKlijna/my-workspaces/blob/master/html/hex.html)|进制转换
+[length.html](https://github.com/JiangKlijna/my-workspaces/blob/master/html/length.html)|真实长度模拟
+[MouseMove.html](https://github.com/JiangKlijna/my-workspaces/blob/master/html/MouseMove.html)|鼠标拖动div
+[repeatpie.html](https://github.com/JiangKlijna/my-workspaces/blob/master/html/repeatpie.html)|旋转的pie
+[Shudu.html](https://github.com/JiangKlijna/my-workspaces/blob/master/html/Shudu.html)|数独游戏
+[sousuo.html](https://github.com/JiangKlijna/my-workspaces/blob/master/html/sousuo.html)|搜索框
+[TopButton.html](https://github.com/JiangKlijna/my-workspaces/blob/master/html/TopButton.html)|快速置顶按钮
+[urlform.html](https://github.com/JiangKlijna/my-workspaces/blob/master/html/urlform.html)|html版api请求工具
+
