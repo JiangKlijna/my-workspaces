@@ -92,10 +92,10 @@ func singleHandler(port string) http.Handler {
 		start := time.Now()
 		outputHandler(w, r)
 		str := fmt.Sprintf(
-			"Server %s: %s Comleted %s %s in %v from %s\n",
+			"Server %s: %s Comleted %s %s in %v from %s",
 			port, start.Format("2006-01-02 15:04:05"),
 			r.Method, r.URL.Path, time.Since(start), r.RemoteAddr)
-		fmt.Print(str)
+		go fmt.Println(str)
 	}
 	return http.HandlerFunc(loggingHandler)
 }

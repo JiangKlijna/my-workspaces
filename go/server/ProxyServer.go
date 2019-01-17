@@ -144,13 +144,13 @@ func loggingHandler(next http.Handler) http.Handler {
 		start := time.Now()
 		next.ServeHTTP(w, r)
 		str := fmt.Sprintf(
-			"%s Comleted %s %s in %v from %s\n",
+			"%s Comleted %s %s in %v from %s",
 			start.Format("2006-01-02 15:04:05"),
 			r.Method,
 			r.URL.Path,
 			time.Since(start),
 			r.RemoteAddr)
-		go fmt.Print(str)
+		go fmt.Println(str)
 	})
 }
 
