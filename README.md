@@ -23,6 +23,7 @@
 [AssemblyLineFactory.java](https://github.com/JiangKlijna/my-workspaces/blob/master/java/AssemblyLineFactory.java)|流水线工厂-线程池
 [Compression.java](https://github.com/JiangKlijna/my-workspaces/blob/master/java/Compression.java)|打包一个最小rt.jar
 [Hex.java](https://github.com/JiangKlijna/my-workspaces/blob/master/java/Hex.java)|进制转换
+[ObjectMap.java](https://github.com/JiangKlijna/my-workspaces/blob/master/java/ObjectMap.java)|把Object当作Map处理
 [PngBuilder.java](https://github.com/JiangKlijna/my-workspaces/blob/master/java/PngBuilder.java)|生成包含所有颜色的png
 [ProducerConsumer.java](https://github.com/JiangKlijna/my-workspaces/blob/master/java/ProducerConsumer.java)|生产者消费者模式
 [RomanNumber.java](https://github.com/JiangKlijna/my-workspaces/blob/master/java/RomanNumber.java)|罗马数字转换
