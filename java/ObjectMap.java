@@ -1,15 +1,18 @@
 
 import java.lang.reflect.Field;
-import java.util.AbstractMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-
+/**
+ * 可以把Object当作Map去处理
+ * 不支持remove clear等操作
+ *
+ * @author caojiang
+ */
 public class ObjectMap extends AbstractMap<String, Object> {
 
     private final Object object;
     private Set<Entry<String, Object>> set;
+
 
     public static ObjectMap convert(Object object) {
         return new ObjectMap(object);
@@ -43,20 +46,31 @@ public class ObjectMap extends AbstractMap<String, Object> {
     }
 
     @Override
-    public synchronized Set<Entry<String, Object>> entrySet() {
-        if (set == null) {
-            set = new LinkedHashSet<>();
-            initEntrySet();
+    public Set<Entry<String, Object>> entrySet() {
+        if (set == null) synchronized (this) {
+            if (set == null) set = newEntrySet();
         }
         return set;
     }
 
-    private void initEntrySet() {
-        for (Field field : object.getClass().getDeclaredFields()) {
-            set.add(new ObjectEntry(field));
+    public Entry<String, Object>[] newEntryArray() {
+        Field[] fs = object.getClass().getDeclaredFields();
+        ObjectEntry[] oes = new ObjectEntry[fs.length];
+        for (int i = 0; i < fs.length; i++) {
+            oes[i] = new ObjectEntry(fs[i]);
         }
+        return oes;
     }
 
+    public List<Entry<String, Object>> newEntryList() {
+        return Arrays.asList(newEntryArray());
+    }
+
+    public Set<Entry<String, Object>> newEntrySet() {
+        return new ArraySet<>(newEntryArray());
+    }
+
+    // 专属Entry
     private class ObjectEntry implements Map.Entry<String, Object> {
         private final Field field;
 
@@ -100,6 +114,29 @@ public class ObjectMap extends AbstractMap<String, Object> {
         @Override
         public int hashCode() {
             return field.hashCode();
+        }
+    }
+
+    public static class ArraySet<T> extends AbstractSet<T> {
+        public final List<T> set;
+
+        public ArraySet(T[] set) {
+            this.set = Arrays.asList(set);
+        }
+
+        @Override
+        public boolean remove(Object o) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Iterator<T> iterator() {
+            return set.iterator();
+        }
+
+        @Override
+        public int size() {
+            return set.size();
         }
     }
 }
