@@ -75,9 +75,13 @@ func SheetToSql(file *os.File, name *string, sheet *Sheet) {
 		out("VALUES (")
 		n := len(*row)
 		for i, col := range *row {
-			out("\"")
-			out(col)
-			out("\"")
+			if len(col) == 0 {
+				out("NULL")
+			} else {
+				out("'")
+				out(col)
+				out("'")
+			}
 			if i+1 != n {
 				out(",")
 			}
