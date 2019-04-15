@@ -19,6 +19,10 @@ func convert(filenama string) string {
 }
 
 func main() {
+	if len(os.Args) < 2 {
+		println("file is null")
+		os.Exit(1)
+	}
 	datauri := convert(os.Args[1]);
 	fmt.Println(datauri)
 }
