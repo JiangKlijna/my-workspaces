@@ -1,24 +1,31 @@
+#include <cstdio>
+#include <cstdlib>
+#include <ctime>
+#include <typeinfo>
 #include "sort.h"
 
+#define RANDOM(digit) (rand() % digit)
+
 int main(void) {
-	test(new BubbleSort());
-	test(new SelectSort());
-	test(new InsertSort());
-	test(new ShellSort());
-	test(new MergeSort());
-	test(new QuickSort());
-	test(new HeapSort());
-	test(new RadixSort());
+	testSort(new BubbleSort());
+	testSort(new SelectSort());
+	testSort(new InsertSort());
+	testSort(new ShellSort());
+	testSort(new MergeSort());
+	testSort(new QuickSort());
+	testSort(new HeapSort());
+	testSort(new RadixSort());
 	exit(EXIT_SUCCESS);
 	return 0;
 }
 
-void test(Sort* s) {
+void testSort(Sort* s) {
 	IntArray* arr = new IntArray(20, 1000);
 	s->sort(*arr);
 	printf("%s\t", s->getClassName());
 	arr->print();
 	delete arr;
+	delete s;
 }
 
 // implement IntArray
@@ -33,8 +40,10 @@ IntArray::IntArray(int size, int digit) : length(size) {
 		arr[i] = RANDOM(digit);
 	}
 }
+IntArray::IntArray(int size, int* array) : length(size), arr(array) {}
 IntArray::~IntArray() {
-	free(arr);
+	//free(arr);
+	arr = NULL;
 }
 int& IntArray::operator[](int i) {
     return arr[i];

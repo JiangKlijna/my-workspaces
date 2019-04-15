@@ -1,16 +1,11 @@
 #ifndef JIANGKLIJNA_SORT_H__
 #define JIANGKLIJNA_SORT_H__
-#include <cstdio>
-#include <cstdlib>
-#include <ctime>
-#include <typeinfo>
-
-#define RANDOM(digit) (rand() % digit)
 
 class IntArray {
 public:
 	IntArray(int size);
     IntArray(int size, int digit);
+	IntArray(int size, int* array);
 	~IntArray();
     int& operator[](int index);
 	int size();
@@ -26,7 +21,7 @@ public:
 	const char* getClassName();
 };
 
-void test(Sort* s);
+void testSort(Sort* s);
 
 class BubbleSort : public Sort {
 public: void sort(IntArray arr);

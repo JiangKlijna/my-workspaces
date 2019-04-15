@@ -7,9 +7,7 @@ fun test(sort_fun: ((IntArray) -> Unit)) =
 
 fun array(size: Int = 10, digit: Int = 10): IntArray {
     val r = java.util.Random()
-    val arr = IntArray(size)
-    for (i in 0 until size) arr[i] = r.nextInt(digit)
-    return arr
+	return IntArray(size) { r.nextInt(digit) }
 }
 
 fun main(args: Array<String>) {
