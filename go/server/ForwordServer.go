@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -45,12 +46,12 @@ func loggingHandler(next http.HandlerFunc) http.HandlerFunc {
 var client = &http.Client{Transport: &http.Transport{Proxy: nil}}
 
 func forwordHandler(w http.ResponseWriter, r *http.Request) {
-	url, ok := r.URL.Query()["url"]
-	if !ok {
+	if r.URL.RawQuery == "" {
 		http.NotFound(w, r)
 		return
 	}
-	req, err := http.NewRequest(r.Method, url[0], r.Body)
+	url := strings.TrimPrefix(strings.Join(strings.Split(r.URL.RawQuery, "url="), "&"), "&")
+	req, err := http.NewRequest(r.Method, url, r.Body)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
