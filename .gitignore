@@ -28,7 +28,9 @@ target/
 build/
 *.log
 
+
 #extra
+.vscode/
 test/
 *.ppm
 *.db
