@@ -1,28 +1,45 @@
 package main
 
 import (
-	"os"
+	"encoding/base64"
 	"fmt"
 	"io/ioutil"
-	"encoding/base64"
+	"mime"
+	"os"
+	"path/filepath"
 )
 
-const headerString string = "data:image/png;base64,"
+const DataUriRemark = `datauri execute shell:
+	datauri [file]
 
-func convert(filenama string) string {
-    bytes, err := ioutil.ReadFile(filenama)
-    if err != nil {
-        fmt.Print(err)
-    }
-	encodeString := base64.StdEncoding.EncodeToString(bytes)
-	return headerString + encodeString
+Example:
+	datauri 1.png`
+
+func getFileName() string {
+	if len(os.Args) < 2 {
+		println(DataUriRemark)
+		os.Exit(1)
+	}
+	return os.Args[1]
+}
+
+func getBase64ByFilename(filenama string) string {
+	bytes, err := ioutil.ReadFile(filenama)
+	if err != nil {
+		print(err.Error())
+	}
+	return base64.StdEncoding.EncodeToString(bytes)
+}
+
+func getContentTypeByFilename(filenama string) string {
+	ct := mime.TypeByExtension(filepath.Ext(filenama))
+	if ct == "" {
+		return "text/plain"
+	}
+	return ct
 }
 
 func main() {
-	if len(os.Args) < 2 {
-		println("file is null")
-		os.Exit(1)
-	}
-	datauri := convert(os.Args[1]);
-	fmt.Println(datauri)
+	fn := getFileName()
+	fmt.Printf("data:%s;base64,%s\n", getContentTypeByFilename(fn), getBase64ByFilename(fn))
 }
