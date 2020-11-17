@@ -3,7 +3,7 @@
 
 function RandomArray {
     param ([int]$size = 10, [int]$digit = 10)
-    return Get-Random -Maximum 1000 -SetSeed (Get-Random) -Count 20
+    return Get-Random -Maximum $digit -SetSeed (Get-Random) -Count $size
 }
 
 function ArrayToString {
