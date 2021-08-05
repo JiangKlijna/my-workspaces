@@ -9,41 +9,95 @@ import (
 	"strings"
 	"time"
 
-	"github.com/360EntSecGroup-Skylar/excelize"
+	"github.com/tealeg/xlsx/v3"
 )
 
 // 可以解析xlsx和csv两种文件,xlsx为多个Sheet,csv为一张Sheet
+type Sheet interface {
+	SheetName() string
+	FirstLine() []string
+	Foreach(func(*[]string))
+	Length() int
+}
 
-// Sheet 二维字符串数组即为一张表
-type Sheet struct {
+// CsvSheet 二维字符串数组即为一张表
+type CsvSheet struct {
 	Name string     // 表名
 	Data [][]string // 核心数据
 }
 
-// Header 获得表头列表
-func (s *Sheet) Header() []string {
+// Name 获得表头名
+func (s *CsvSheet) SheetName() string {
+	return s.Name
+}
+
+// FirstLine 获得表头列表
+func (s *CsvSheet) FirstLine() []string {
 	return s.Data[0]
 }
 
 // Foreach 遍历[1:n]
-func (s *Sheet) Foreach(f func(*[]string)) {
+func (s *CsvSheet) Foreach(f func(*[]string)) {
 	for i, n := 1, len(s.Data); i < n; i++ {
 		f(&s.Data[i])
 	}
 }
 
 // Length size-1
-func (s *Sheet) Length() int {
+func (s *CsvSheet) Length() int {
 	return len(s.Data) - 1
 }
 
-// NewSheet new(Sheet)
-func NewSheet(Name string, Data [][]string) *Sheet {
-	return &Sheet{Name, Data}
+// NewCsvSheet new(Sheet)
+func NewCsvSheet(Name string, Data [][]string) Sheet {
+	return &CsvSheet{Name, Data}
+}
+
+type XlsxSheet struct {
+	*xlsx.Sheet
+}
+
+// Name 获得表头名
+func (s *XlsxSheet) SheetName() string {
+	return s.Name
+}
+
+// FirstLine 获得表头列表
+func (s *XlsxSheet) FirstLine() []string {
+	h := make([]string, 0)
+	row, _ := s.Row(0)
+	row.ForEachCell(func(c *xlsx.Cell) error {
+		h = append(h, c.Value)
+		return nil
+	})
+	return h
+}
+
+// Foreach 遍历[1:n]
+func (s *XlsxSheet) Foreach(f func(*[]string)) {
+	for i, n := 1, s.MaxRow; i < n; i++ {
+		h := make([]string, 0)
+		row, _ := s.Row(i)
+		row.ForEachCell(func(c *xlsx.Cell) error {
+			h = append(h, c.Value)
+			return nil
+		})
+		f(&h)
+	}
+}
+
+// Length size-1
+func (s *XlsxSheet) Length() int {
+	return s.MaxRow - 1
+}
+
+// NewCsvSheet new(Sheet)
+func NewXlsxSheet(sheet *xlsx.Sheet) Sheet {
+	return &XlsxSheet{sheet}
 }
 
 // InitSheets 初始化 命令行参数和excelize
-func InitSheets() []*Sheet {
+func InitSheets() []Sheet {
 	if len(os.Args) <= 1 {
 		os.Exit(1)
 	}
@@ -66,18 +120,18 @@ func InitSheets() []*Sheet {
 			}
 			data = append(data, record)
 		}
-		return []*Sheet{NewSheet(strings.TrimSuffix(filepath.Base(table.Name()), ".csv"), data)}
+		return []Sheet{NewCsvSheet(strings.TrimSuffix(filepath.Base(table.Name()), ".csv"), data)}
 	}
 	if strings.HasSuffix(os.Args[1], ".xlsx") {
-		xlsx, err := excelize.OpenFile(os.Args[1])
+		xlsx, err := xlsx.OpenFile(os.Args[1])
 		if err != nil {
 			println(err.Error())
 			os.Exit(1)
 		}
-		ss := make([]*Sheet, 0)
-		sheetmap := xlsx.GetSheetMap()
-		for _, name := range sheetmap {
-			ss = append(ss, NewSheet(name, xlsx.GetRows(name)))
+		ss := make([]Sheet, 0)
+
+		for _, sheet := range xlsx.Sheets {
+			ss = append(ss, NewXlsxSheet(sheet))
 		}
 		return ss
 	}
@@ -87,18 +141,18 @@ func InitSheets() []*Sheet {
 }
 
 // SheetsToSQL 整个excel文件处理,并返回共有几张表
-func SheetsToSQL(done chan bool, sheets []*Sheet) {
+func SheetsToSQL(done chan bool, sheets []Sheet) {
 	for _, s := range sheets {
-		go func(sheet *Sheet) {
+		go func(sheet Sheet) {
 			time.Sleep(time.Second)
 			if sheet.Length() < 1 {
-				println(sheet.Name, "is empty")
+				println(sheet.SheetName(), "is empty")
 				done <- false
 				return
 			}
-			sqlF, err := os.Create(sheet.Name + ".sql")
+			sqlF, err := os.Create(sheet.SheetName() + ".sql")
 			if err != nil {
-				println(sheet.Name+".sql", "create error", err.Error())
+				println(sheet.SheetName()+".sql", "create error", err.Error())
 				done <- false
 				return
 			}
@@ -109,8 +163,9 @@ func SheetsToSQL(done chan bool, sheets []*Sheet) {
 }
 
 // SheetToSQL 针对一张表的sql文件写入
-func SheetToSQL(sheet *Sheet, file *os.File) {
-	h := []byte(HeaderToSQL(sheet.Name, sheet.Header()))
+func SheetToSQL(sheet Sheet, file *os.File) {
+	header, template := SplitHeader(sheet.FirstLine())
+	h := []byte(HeaderToSQL(sheet.SheetName(), header))
 	out := file.WriteString
 	sheet.Foreach(func(row *[]string) {
 		file.Write(h)
@@ -120,9 +175,13 @@ func SheetToSQL(sheet *Sheet, file *os.File) {
 			if len(col) == 0 {
 				out("NULL")
 			} else {
-				out("'")
-				out(col)
-				out("'")
+				if "" == template[i] {
+					out("'")
+					out(col)
+					out("'")
+				} else {
+					out(strings.ReplaceAll(template[i], header[i], col))
+				}
 			}
 			if i+1 != n {
 				out(",")
@@ -141,13 +200,31 @@ func HeaderToSQL(name string, header []string) string {
 	out(" (")
 	n := len(header)
 	for i, col := range header {
+		out("\"")
 		out(col)
+		out("\"")
 		if i+1 != n {
 			out(",")
 		}
 	}
 	out(") ")
 	return buf.String()
+}
+
+func SplitHeader(oneline []string) ([]string, []string) {
+	header := make([]string, len(oneline))
+	template := make([]string, len(oneline))
+	for i, v := range oneline {
+		arr := strings.Split(v, "#")
+		if len(arr) == 1 {
+			header[i] = v
+			template[i] = ""
+		} else {
+			header[i] = arr[0]
+			template[i] = arr[1]
+		}
+	}
+	return header, template
 }
 
 func main() {
