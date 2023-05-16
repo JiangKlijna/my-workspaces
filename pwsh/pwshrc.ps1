@@ -43,6 +43,35 @@ function Get-P([string]$link) {
 	ping $urihost
 }
 
+function Get-UUID([int]$size = 1, [string]$format="N") {
+    for ($i = 1; $i -le $size; $i++) {
+        [guid]::NewGuid().ToString($format)
+    }
+}
+
+function Merge-Files {
+    param (
+        [string]$FolderPath,
+        [string]$FileSuffix,
+        [string]$FilePrefix
+    )
+    $currentDirectory = Get-Location
+    $searchPattern = "$FilePrefix*$FileSuffix"
+    $files = Get-ChildItem $FolderPath -Filter $searchPattern
+
+    if ($files.Count -eq 0) {
+        Write-Host "No matching files found."
+        return
+    }
+    $outputFileNamePrefix = (Get-Item -Path $folderPath).Name
+    $filePaths = Get-ChildItem -Path $folderPath -Filter "$filePrefix*$fileSuffix" | Select-Object -ExpandProperty FullName
+    $newFilePath = Join-Path -Path $currentDirectory -ChildPath "$outputFileNamePrefix.$FileSuffix"
+    $content = Get-Content -Path $filePaths | Out-String
+
+    Set-Content -Path $newFilePath -Value $content
+}
+
+
 
 Remove-Item alias:ls
 Set-Alias ll Get-ChildItem
