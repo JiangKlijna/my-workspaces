@@ -1,50 +1,228 @@
 # My WorkSpaces
-- Golang
 
-ÎÄ¼ş|ËµÃ÷
-----|----
-[server/ClusterServer.go](https://github.com/JiangKlijna/my-workspaces/blob/master/go/server/ClusterServer.go)|¼¯Èº·şÎñ(Íæ¾ß)
-[server/DynamicServer.go](https://github.com/JiangKlijna/my-workspaces/blob/master/go/server/DynamicServer.go)|¶¯Ì¬·şÎñ(Íæ¾ß)
-[server/ProxyServer.go](https://github.com/JiangKlijna/my-workspaces/blob/master/go/server/ProxyServer.go)|´úÀí·şÎñ
-[server/StaticServer.go](https://github.com/JiangKlijna/my-workspaces/blob/master/go/server/StaticServer.go)|¾²Ì¬·şÎñ
-[tool/compile.go](https://github.com/JiangKlijna/my-workspaces/blob/master/go/tool/compile.go)|½âÊÍÖ´ĞĞ(µ÷ÓÃapi)¶àÖÖ±à³ÌÓïÑÔ
-[tool/datauri.go](https://github.com/JiangKlijna/my-workspaces/blob/master/go/tool/datauri.go)|image×ªbase64Ä£Ê½
-[tool/localip.go](https://github.com/JiangKlijna/my-workspaces/blob/master/go/tool/localip.go)|²éÑ¯±¾»úip
-[tool/logcmd.go](https://github.com/JiangKlijna/my-workspaces/blob/master/go/tool/logcmd.go)|¼ÇÂ¼ÃüÁîÖ´ĞĞ½á¹û
-[tool/messagebox.go](https://github.com/JiangKlijna/my-workspaces/blob/master/go/tool/messagebox.go)|¿çÆ½Ì¨Message Box
-[tool/recmd.go](https://github.com/JiangKlijna/my-workspaces/blob/master/go/tool/recmd.go)|ÖØ¸´Ö´ĞĞÃüÁî
-[tool/sort.go](https://github.com/JiangKlijna/my-workspaces/blob/master/go/tool/sort.go)|°Ë´óÅÅĞò
+![GitHub stars](https://img.shields.io/github/stars/JiangKlijna/my-workspaces)
+![GitHub forks](https://img.shields.io/github/forks/JiangKlijna/my-workspaces)
 
-- Java
+> A collection of utility code snippets and learning examples in multiple programming languages.
 
-ÎÄ¼ş|ËµÃ÷
-----|----
-[AlternateThread.java](https://github.com/JiangKlijna/my-workspaces/blob/master/java/AlternateThread.java)|½»ÌæÖ´ĞĞÏß³Ì-Ïß³Ì³Ø
-[AssemblyLineFactory.java](https://github.com/JiangKlijna/my-workspaces/blob/master/java/AssemblyLineFactory.java)|Á÷Ë®Ïß¹¤³§-Ïß³Ì³Ø
-[Compression.java](https://github.com/JiangKlijna/my-workspaces/blob/master/java/Compression.java)|´ò°üÒ»¸ö×îĞ¡rt.jar
-[Hex.java](https://github.com/JiangKlijna/my-workspaces/blob/master/java/Hex.java)|½øÖÆ×ª»»
-[ObjectMap.java](https://github.com/JiangKlijna/my-workspaces/blob/master/java/ObjectMap.java)|°ÑObjectµ±×÷Map´¦Àí
-[PngBuilder.java](https://github.com/JiangKlijna/my-workspaces/blob/master/java/PngBuilder.java)|Éú³É°üº¬ËùÓĞÑÕÉ«µÄpng
-[ProducerConsumer.java](https://github.com/JiangKlijna/my-workspaces/blob/master/java/ProducerConsumer.java)|Éú²úÕßÏû·ÑÕßÄ£Ê½
-[RomanNumber.java](https://github.com/JiangKlijna/my-workspaces/blob/master/java/RomanNumber.java)|ÂŞÂíÊı×Ö×ª»»
-[Sort.java](https://github.com/JiangKlijna/my-workspaces/blob/master/java/Sort.java)|°Ë´óÅÅĞò
-[ThreadPool.java](https://github.com/JiangKlijna/my-workspaces/blob/master/java/ThreadPool.java)|Ïß³Ì³ØÊµÏÖ
-[Times.java](https://github.com/JiangKlijna/my-workspaces/blob/master/java/Times.java)|²Ù×÷Ê±¼ä-½âÊÍÆ÷Ä£Ê½
-[Tuple.java](https://github.com/JiangKlijna/my-workspaces/blob/master/java/Tuple.java)|javaÔª×é
+## ğŸ“ Project Structure
 
-- Html
+This repository contains various utility code snippets and learning examples across multiple programming languages.
 
-ÎÄ¼ş|ËµÃ÷
-----|----
-[2048.html](https://github.com/JiangKlijna/my-workspaces/blob/master/html/AlternateThread.html)|2048Ğ¡ÓÎÏ·
-[calendar.html](https://github.com/JiangKlijna/my-workspaces/blob/master/html/calendar.html)|ÈÕÀúÕ¹Ê¾
-[color_obj.html](https://github.com/JiangKlijna/my-workspaces/blob/master/html/color_obj.html)|ÑÕÉ«¸ñÊ½×ª»»
-[hex.html](https://github.com/JiangKlijna/my-workspaces/blob/master/html/hex.html)|½øÖÆ×ª»»
-[length.html](https://github.com/JiangKlijna/my-workspaces/blob/master/html/length.html)|ÕæÊµ³¤¶ÈÄ£Äâ
-[MouseMove.html](https://github.com/JiangKlijna/my-workspaces/blob/master/html/MouseMove.html)|Êó±êÍÏ¶¯div
-[repeatpie.html](https://github.com/JiangKlijna/my-workspaces/blob/master/html/repeatpie.html)|Ğı×ªµÄpie
-[Shudu.html](https://github.com/JiangKlijna/my-workspaces/blob/master/html/Shudu.html)|Êı¶ÀÓÎÏ·
-[sousuo.html](https://github.com/JiangKlijna/my-workspaces/blob/master/html/sousuo.html)|ËÑË÷¿ò
-[TopButton.html](https://github.com/JiangKlijna/my-workspaces/blob/master/html/TopButton.html)|¿ìËÙÖÃ¶¥°´Å¥
-[urlform.html](https://github.com/JiangKlijna/my-workspaces/blob/master/html/urlform.html)|html°æapiÇëÇó¹¤¾ß
+```
+my-workspaces/
+â”œâ”€â”€ go/           # Go utilities and servers
+â”œâ”€â”€ java/         # Java utilities and algorithms
+â”œâ”€â”€ cpp/          # C++ data structures and algorithms
+â”œâ”€â”€ html/         # HTML/JS demos and games
+â”œâ”€â”€ python/       # Python utilities
+â”œâ”€â”€ nodejs/       # Node.js utilities
+â”œâ”€â”€ php/          # PHP utilities
+â”œâ”€â”€ pwsh/         # PowerShell scripts
+â”œâ”€â”€ kotlin/       # Kotlin examples
+â”œâ”€â”€ clojure/      # Clojure examples
+â”œâ”€â”€ setting/      # Configuration files
+â””â”€â”€ .vscode/      # VS Code settings
+```
 
+---
+
+## ğŸŒ Go
+
+### Server Utilities
+
+| File | Description |
+|------|-------------|
+| [server/ClusterServer.go](go/server/ClusterServer.go) | Cluster server - run multiple HTTP servers on different ports |
+| [server/DynamicServer.go](go/server/DynamicServer.go) | Dynamic server with custom routing |
+| [server/ProxyServer.go](go/server/ProxyServer.go) | Proxy server |
+| [server/StaticServer.go](go/server/StaticServer.go) | Static file server |
+| [server/ForwordServer.go](go/server/ForwordServer.go) | Forward server |
+| [server/MonitorServer.go](go/server/MonitorServer.go) | Monitor server |
+| [server/ResourceServer.go](go/server/ResourceServer.go) | Resource server |
+| [server/UploadServer.go](go/server/UploadServer.go) | File upload server |
+
+### Tools
+
+| File | Description |
+|------|-------------|
+| [tool/compile.go](go/tool/compile.go) | Online code compiler using Judge0 API |
+| [tool/datauri.go](go/tool/datauri.go) | Convert images to Base64 data URI |
+| [tool/localip.go](go/tool/localip.go) | Get local IP address |
+| [tool/logcmd.go](go/tool/logcmd.go) | Log command execution results |
+| [tool/messagebox.go](go/tool/messagebox.go) | Cross-platform message box |
+| [tool/recmd.go](go/tool/recmd.go) | Retry command execution |
+| [tool/sort.go](go/tool/sort.go) | Sorting algorithms |
+| [tool/bingimg.go](go/tool/bingimg.go) | Fetch Bing daily wallpaper |
+| [tool/browser.go](go/tool/browser.go) | Browser automation |
+| [tool/json2sql.go](go/tool/json2sql.go) | Convert JSON to SQL |
+| [tool/sheet2sql.go](go/tool/sheet2sql.go) | Convert spreadsheet to SQL |
+| [tool/multi_cpu.go](go/tool/multi_cpu.go) | Multi-core CPU utilities |
+| [image/color-builder.go](go/image/color-builder.go) | Color builder for images |
+
+---
+
+## â˜• Java
+
+### Core Utilities
+
+| File | Description |
+|------|-------------|
+| [Hex.java](java/Hex.java) | Hexadecimal encoding/decoding |
+| [RomanNumber.java](java/RomanNumber.java) | Roman numeral conversion |
+| [Tuple.java](java/Tuple.java) | Tuple implementation |
+| [ObjectMap.java](java/ObjectMap.java) | Object to Map conversion |
+| [Compression.java](java/Compression.java) | Compress JAR files |
+| [PngBuilder.java](java/PngBuilder.java) | Generate PNG with specified colors |
+
+### Concurrency
+
+| File | Description |
+|------|-------------|
+| [ThreadPool.java](java/ThreadPool.java) | Thread pool implementation |
+| [AlternateThread.java](java/AlternateThread.java) | Alternate thread execution |
+| [ProducerConsumer.java](java/ProducerConsumer.java) | Producer-Consumer pattern |
+| [AssemblyLineFactory.java](java/AssemblyLineFactory.java) | Assembly line pattern (disruptor) |
+| [Times.java](java/Times.java) | Timing utilities - timing wheel pattern |
+
+### Algorithms
+
+| File | Description |
+|------|-------------|
+| [Sort.java](java/Sort.java) | 8 sorting algorithms |
+
+### JNI
+
+| File | Description |
+|------|-------------|
+| [jni/](java/jni/) | Java Native Interface examples |
+
+---
+
+## ğŸ–¥ï¸ C++
+
+### Data Structures & Algorithms
+
+| File | Description |
+|------|-------------|
+| [sort/](cpp/sort/) | Sorting algorithms implementation |
+| [list/](cpp/list/) | Linked list implementation |
+| [hex/](cpp/hex/) | Hex utilities |
+
+### Platform Specific
+
+| File | Description |
+|------|-------------|
+| [win32/](cpp/win32/) | Windows API examples |
+| [termux/](cpp/termux/) | Termux (Android) utilities |
+| [test/](cpp/test/) | Test files |
+| [fpoo/](cpp/fpoo/) | Learning exercises |
+
+---
+
+## ğŸŒ HTML
+
+### Games
+
+| File | Description |
+|------|-------------|
+| [2048.html](html/2048.html) | 2048 game |
+| [Shudu.html](html/Shudu.html) | Sudoku game |
+
+### Utilities
+
+| File | Description |
+|------|-------------|
+| [hex.html](html/hex.html) | Hex converter |
+| [calendar.html](html/calendar.html) | Calendar display |
+| [color_obj.html](html/color_obj.html) | Color format converter |
+| [length.html](html/length.html) | Length unit converter |
+| [urlform.html](html/urlform.html) | HTML form to API |
+| [TopButton.html](html/TopButton.html) | Back to top button |
+| [MouseMove.html](html/MouseMove.html) | Drag and drop div |
+| [repeatpie.html](html/repeatpie.html) | Repeating pie chart |
+| [sousuo.html](html/sousuo.html) | Search engine |
+
+---
+
+## ğŸ Python
+
+| File | Description |
+|------|-------------|
+| [latlng.py](python/latlng.py) | Coordinate conversion (WGS/GCJ/BD) |
+| [sort.py](python/sort.py) | Sorting algorithms |
+| [pip_update.py](python/pip_update.py) | Batch pip update utility |
+
+---
+
+## ğŸŸ¢ Node.js
+
+| File | Description |
+|------|-------------|
+| [family.js](nodejs/family.js) | Family birth statistics simulation |
+| [latlng.js](nodejs/latlng.js) | Coordinate conversion |
+| [sort.js](nodejs/sort.js) | Sorting algorithms |
+| [rename.js](nodejs/rename.js) | Batch file rename |
+
+---
+
+## ğŸ”´ PHP
+
+| File | Description |
+|------|-------------|
+| [methods.php](php/methods.php) | Common utility methods |
+| [sort.php](php/sort.php) | Sorting algorithms |
+| [upload.php](php/upload.php) | File upload handler |
+
+---
+
+## âš¡ PowerShell
+
+| File | Description |
+|------|-------------|
+| [sort.ps1](pwsh/sort.ps1) | Sorting algorithms |
+| [pwshrc.ps1](pwsh/pwshrc.ps1) | PowerShell configuration |
+
+---
+
+## ğŸŸ¡ Kotlin
+
+| File | Description |
+|------|-------------|
+| [Sort.kt](kotlin/Sort.kt) | Sorting algorithms |
+
+---
+
+## âš™ï¸ Clojure
+
+| File | Description |
+|------|-------------|
+| [learn.clj](clojure/learn.clj) | Learning examples |
+
+---
+
+## âš™ï¸ Settings
+
+| File | Description |
+|------|-------------|
+| [setting/.bashrc](setting/.bashrc) | Bash configuration |
+| [setting/soft.yml](setting/soft.yml) | Software list |
+
+---
+
+## ğŸ”§ VS Code Settings
+
+| File | Description |
+|------|-------------|
+| [.vscode/launch.json](.vscode/launch.json) | Debug configurations |
+| [.vscode/tasks.json](.vscode/tasks.json) | Build tasks |
+
+---
+
+## ğŸ“ License
+
+[MIT](LICENSE)
+
+---
+
+> Last updated: 2026-03-02
