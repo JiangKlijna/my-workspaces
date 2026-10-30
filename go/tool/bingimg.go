@@ -14,12 +14,18 @@ import (
 )
 
 const (
-	UserAgent      = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36 Edg/86.0.622.51"
-	CurrentPathDir = "./bingimg/"
+	UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36 Edg/86.0.622.51"
 )
 
+// CurrentPathDir 固定指向 exe 自身所在目录下的 bingimg/,
+// 避免被计划任务以其他工作目录(如 System32)启动时把图片写到错误位置。
+var CurrentPathDir = "./bingimg/"
+
 func init() {
-	_ = os.Mkdir(CurrentPathDir, 0755)
+	if exePath, err := os.Executable(); err == nil {
+		CurrentPathDir = filepath.Join(filepath.Dir(exePath), "bingimg") + string(os.PathSeparator)
+	}
+	_ = os.MkdirAll(CurrentPathDir, 0755)
 }
 
 // PathExists 判断文件是否存在
@@ -84,8 +90,13 @@ func DownloadImage(imageURL string) (string, error) {
 	day := time.Now().Format("2006-01-02")
 	path := CurrentPathDir + day + ".jpg"
 	if PathExists(path) {
+		// 今天已下载过:跳过下载,复用已有文件(仍设置壁纸,进程正常退出)。
 		println(path + " is Exists.")
-		os.Exit(1)
+		absPath, err := filepath.Abs(path)
+		if err != nil {
+			return "", err
+		}
+		return absPath, nil
 	}
 	request, err := http.NewRequest("GET", imageURL, nil)
 	if err != nil {
@@ -144,4 +155,7 @@ func main() {
 		}
 		time.Sleep(time.Second * time.Duration(i+1))
 	}
+	// 全部重试失败:以非 0 退出码结束,让计划任务能正确记录失败。
+	println("all 10 attempts failed.")
+	os.Exit(1)
 }
