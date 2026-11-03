@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 	"syscall"
 	"time"
 	"unsafe"
@@ -69,7 +70,8 @@ func GetBingBackgroundImageURL() (string, error) {
 		return "", err
 	}
 	type BingImage struct {
-		URL string `json:"url"`
+		URL     string `json:"url"`
+		URLBase string `json:"urlbase"`
 	}
 	type BingImages struct {
 		Images []BingImage `json:"images"`
@@ -80,7 +82,12 @@ func GetBingBackgroundImageURL() (string, error) {
 		return "", err
 	}
 	if len(bing.Images) > 0 && bing.Images[0].URL != "" {
-		return "https://www.bing.com" + bing.Images[0].URL, nil
+		img := bing.Images[0]
+		// 优先用 urlbase 拼 UHD 原图(4K),失败再退回接口返回的 1920x1080。
+		if img.URLBase != "" {
+			return "https://www.bing.com" + img.URLBase + "_UHD.jpg", nil
+		}
+		return "https://www.bing.com" + strings.ReplaceAll(img.URL, "1920x1080", "UHD"), nil
 	}
 	return "", errors.New(string(data))
 }
